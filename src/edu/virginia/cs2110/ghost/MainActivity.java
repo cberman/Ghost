@@ -4,7 +4,9 @@ package edu.virginia.cs2110.ghost;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
@@ -25,11 +27,15 @@ public class MainActivity extends FragmentActivity implements
 	 * returned in Activity.onActivityResult
 	 */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+	private LocationClient mLocationClient;
+    // Global variable to hold the current location
+    private Location mCurrentLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mLocationClient = new LocationClient(this, this, this);
 	}
 
 	@Override
@@ -37,6 +43,27 @@ public class MainActivity extends FragmentActivity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	/*
+	 * Called when the Activity becomes visible.
+	 */
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// Connect the client.
+		mLocationClient.connect();
+	    mCurrentLocation = mLocationClient.getLastLocation();
+	}
+
+	/*
+	 * Called when the Activity is no longer visible.
+	 */
+	@Override
+	protected void onStop() {
+		// Disconnecting the client invalidates it.
+		mLocationClient.disconnect();
+		super.onStop();
 	}
 
 	// Define a DialogFragment that displays the error dialog
@@ -85,11 +112,11 @@ public class MainActivity extends FragmentActivity implements
 			// ...
 		}
 	}
-	
+
 	private void showErrorDialog(int errorCode) {
 		// Get the error dialog from Google Play services
-		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-				errorCode, this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
+				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
 		// If Google Play services can provide an error dialog
 		if (errorDialog != null) {
@@ -98,8 +125,7 @@ public class MainActivity extends FragmentActivity implements
 			// Set the dialog in the DialogFragment
 			errorFragment.setDialog(errorDialog);
 			// Show the error dialog in the DialogFragment
-			errorFragment.show(getSupportFragmentManager(),
-					"Location Updates");
+			errorFragment.show(getSupportFragmentManager(), "Location Updates");
 		}
 	}
 
