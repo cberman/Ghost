@@ -28,8 +28,8 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 	private LocationClient mLocationClient;
-    // Global variable to hold the current location
-    private Location mCurrentLocation;
+	// Global variable to hold the current location
+	private Location mCurrentLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,10 @@ public class MainActivity extends FragmentActivity implements
 	protected void onStart() {
 		super.onStart();
 		// Connect the client.
-		mLocationClient.connect();
-	    mCurrentLocation = mLocationClient.getLastLocation();
+		if (servicesConnected()) {
+			mLocationClient.connect();
+			mCurrentLocation = mLocationClient.getLastLocation();
+		}
 	}
 
 	/*
