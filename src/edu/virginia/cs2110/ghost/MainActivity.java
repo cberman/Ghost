@@ -5,6 +5,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
 
 import android.location.Location;
 import android.os.Bundle;
@@ -20,10 +21,10 @@ import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener {
+		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
 
 	/*
-	 * Define a request code to send to Google Play services This code is
+	 * Define a request code to send to Google Play services. This code is
 	 * returned in Activity.onActivityResult
 	 */
 	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
@@ -51,10 +52,12 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
-		// Connect the client.
 		if (servicesConnected()) {
+			// Connect the client.
 			mLocationClient.connect();
 			mCurrentLocation = mLocationClient.getLastLocation();
+			double latitude = mCurrentLocation.getLatitude();
+			double longitude = mCurrentLocation.getLongitude();
 		}
 	}
 
@@ -159,7 +162,8 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		// Display the connection status
-		Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Connected to Location Services",
+				Toast.LENGTH_SHORT).show();
 
 	}
 
@@ -170,7 +174,8 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onDisconnected() {
 		// Display the connection status
-		Toast.makeText(this, "Disconnected. Please re-connect.",
+		Toast.makeText(this,
+				"Disconnected from Location Services. Please re-connect.",
 				Toast.LENGTH_SHORT).show();
 	}
 
@@ -204,6 +209,16 @@ public class MainActivity extends FragmentActivity implements
 			 */
 			showErrorDialog(connectionResult.getErrorCode());
 		}
+	}
+
+	// Define the callback method that receives location updates
+	@Override
+	public void onLocationChanged(Location location) {
+		// Report to the UI that the location was updated
+		String msg = "Updated Location: "
+				+ Double.toString(location.getLatitude()) + ","
+				+ Double.toString(location.getLongitude());
+		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
 }
