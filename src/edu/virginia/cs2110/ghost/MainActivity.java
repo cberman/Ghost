@@ -22,12 +22,6 @@ import android.widget.Toast;
 public class MainActivity extends FragmentActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
-
-	/*
-	 * Define a request code to send to Google Play services. This code is
-	 * returned in Activity.onActivityResult
-	 */
-	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	private Location mCurrentLocation;
@@ -102,7 +96,7 @@ public class MainActivity extends FragmentActivity implements
 		// Decide what to do based on the original request code
 		switch (requestCode) {
 		// ...
-		case CONNECTION_FAILURE_RESOLUTION_REQUEST:
+		case GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST:
 			/*
 			 * If the result code is Activity.RESULT_OK, try to connect again
 			 */
@@ -121,7 +115,7 @@ public class MainActivity extends FragmentActivity implements
 	private void showErrorDialog(int errorCode) {
 		// Get the error dialog from Google Play services
 		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
-				this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+				this, GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
 		// If Google Play services can provide an error dialog
 		if (errorDialog != null) {
@@ -193,7 +187,7 @@ public class MainActivity extends FragmentActivity implements
 			try {
 				// Start an Activity that tries to resolve the error
 				connectionResult.startResolutionForResult(this,
-						CONNECTION_FAILURE_RESOLUTION_REQUEST);
+						GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 				/*
 				 * Thrown if Google Play services canceled the original
 				 * PendingIntent

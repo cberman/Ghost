@@ -2,6 +2,11 @@ package edu.virginia.cs2110.ghost;
 
 import com.google.android.gms.location.Geofence;
 
+/**
+ * Based on code from
+ * http://developer.android.com/training/location/geofencing.html
+ * 
+ */
 public class Ghost {
 	// Instance variables
 	private final String id;
