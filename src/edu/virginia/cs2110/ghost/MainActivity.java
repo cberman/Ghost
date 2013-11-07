@@ -96,7 +96,7 @@ public class MainActivity extends FragmentActivity implements
 		// Decide what to do based on the original request code
 		switch (requestCode) {
 		// ...
-		case GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST:
+		case Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST:
 			/*
 			 * If the result code is Activity.RESULT_OK, try to connect again
 			 */
@@ -115,7 +115,7 @@ public class MainActivity extends FragmentActivity implements
 	private void showErrorDialog(int errorCode) {
 		// Get the error dialog from Google Play services
 		Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(errorCode,
-				this, GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+				this, Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 
 		// If Google Play services can provide an error dialog
 		if (errorDialog != null) {
@@ -187,7 +187,7 @@ public class MainActivity extends FragmentActivity implements
 			try {
 				// Start an Activity that tries to resolve the error
 				connectionResult.startResolutionForResult(this,
-						GeofenceUtils.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+						Constants.CONNECTION_FAILURE_RESOLUTION_REQUEST);
 				/*
 				 * Thrown if Google Play services canceled the original
 				 * PendingIntent

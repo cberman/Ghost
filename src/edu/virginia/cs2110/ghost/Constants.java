@@ -1,23 +1,6 @@
 package edu.virginia.cs2110.ghost;
 
-/**
- * This class defines constants used by location sample apps. Taken from
- * https://
- * code.google.com/p/nononsense-notes/source/browse/NoNonsenseNotes/src/com
- * /nononsenseapps/util/GeofenceUtils.java?name=notes2013_ui&r=
- * fa81e31081460ecefc768bb1eb1acd023c5717de
- */
-public final class GeofenceUtils {
-
-	// Used to track what type of geofence removal request was made.
-	public enum REMOVE_TYPE {
-		INTENT, LIST
-	}
-
-	// Used to track what type of request is in process
-	public enum REQUEST_TYPE {
-		ADD, REMOVE
-	}
+public final class Constants {
 
 	// Invalid values, used to test geofence storage when retrieving geofences
 	public static final long INVALID_LONG_VALUE = -999l;
@@ -49,5 +32,24 @@ public final class GeofenceUtils {
 	public static final String EMPTY_STRING = new String();
 
 	public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
+	
+
+	/*
+	 * Timing constants
+	 */
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+    private static final long SECONDS_PER_HOUR = 60;
+    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+    // Update frequency in milliseconds
+    private static final long UPDATE_INTERVAL =
+            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+    private static final long FASTEST_INTERVAL =
+            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+    private static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
+    private static final long GEOFENCE_EXPIRATION_TIME =
+            GEOFENCE_EXPIRATION_IN_HOURS *
+            SECONDS_PER_HOUR *
+            MILLISECONDS_PER_SECOND;
 
 }

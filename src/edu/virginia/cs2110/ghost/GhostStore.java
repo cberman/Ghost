@@ -11,19 +11,13 @@ import android.content.SharedPreferences.Editor;
  */
 public class GhostStore {
 	// Keys for flattened geofences stored in SharedPreferences
-	public static final String KEY_LATITUDE = "com.example.android.geofence.KEY_LATITUDE";
-	public static final String KEY_LONGITUDE = "com.example.android.geofence.KEY_LONGITUDE";
-	public static final String KEY_RADIUS = "com.example.android.geofence.KEY_RADIUS";
-	public static final String KEY_EXPIRATION_DURATION = "com.example.android.geofence.KEY_EXPIRATION_DURATION";
-	public static final String KEY_TRANSITION_TYPE = "com.example.android.geofence.KEY_TRANSITION_TYPE";
+	public static final String KEY_LATITUDE = "edu.virginia.cs2110.ghost.KEY_LATITUDE";
+	public static final String KEY_LONGITUDE = "edu.virginia.cs2110.ghost.KEY_LONGITUDE";
+	public static final String KEY_RADIUS = "edu.virginia.cs2110.ghost.KEY_RADIUS";
+	public static final String KEY_EXPIRATION_DURATION = "edu.virginia.cs2110.ghost.KEY_EXPIRATION_DURATION";
+	public static final String KEY_TRANSITION_TYPE = "edu.virginia.cs2110.ghost.KEY_TRANSITION_TYPE";
 	// The prefix for flattened geofence keys
-	public static final String KEY_PREFIX = "com.example.android.geofence.KEY";
-	/*
-	 * Invalid values, used to test geofence storage when retrieving geofences
-	 */
-	public static final long INVALID_LONG_VALUE = -999l;
-	public static final float INVALID_FLOAT_VALUE = -999.0f;
-	public static final int INVALID_INT_VALUE = -999;
+	public static final String KEY_PREFIX = "edu.virginia.cs2110.ghost.KEY";
 	// The SharedPreferences object in which geofences are stored
 	private final SharedPreferences preferences;
 	// The name of the SharedPreferences
@@ -48,38 +42,38 @@ public class GhostStore {
 		 * INVALID_FLOAT_VALUE if it doesn't exist
 		 */
 		double lat = preferences.getFloat(getGhostFieldKey(id, KEY_LATITUDE),
-				INVALID_FLOAT_VALUE);
+				Constants.INVALID_FLOAT_VALUE);
 		/*
 		 * Get the longitude for the geofence identified by id, or
 		 * INVALID_FLOAT_VALUE if it doesn't exist
 		 */
 		double lng = preferences.getFloat(getGhostFieldKey(id, KEY_LONGITUDE),
-				INVALID_FLOAT_VALUE);
+				Constants.INVALID_FLOAT_VALUE);
 		/*
 		 * Get the radius for the geofence identified by id, or
 		 * INVALID_FLOAT_VALUE if it doesn't exist
 		 */
 		float radius = preferences.getFloat(getGhostFieldKey(id, KEY_RADIUS),
-				INVALID_FLOAT_VALUE);
+				Constants.INVALID_FLOAT_VALUE);
 		/*
 		 * Get the expiration duration for the geofence identified by id, or
 		 * INVALID_LONG_VALUE if it doesn't exist
 		 */
 		long expirationDuration = preferences.getLong(
 				getGhostFieldKey(id, KEY_EXPIRATION_DURATION),
-				INVALID_LONG_VALUE);
+				Constants.INVALID_LONG_VALUE);
 		/*
 		 * Get the transition type for the geofence identified by id, or
 		 * INVALID_INT_VALUE if it doesn't exist
 		 */
 		int transitionType = preferences.getInt(
-				getGhostFieldKey(id, KEY_TRANSITION_TYPE), INVALID_INT_VALUE);
+				getGhostFieldKey(id, KEY_TRANSITION_TYPE), Constants.INVALID_INT_VALUE);
 		// If none of the values is incorrect, return the object
-		if (lat != GeofenceUtils.INVALID_FLOAT_VALUE
-				&& lng != GeofenceUtils.INVALID_FLOAT_VALUE
-				&& radius != GeofenceUtils.INVALID_FLOAT_VALUE
-				&& expirationDuration != GeofenceUtils.INVALID_LONG_VALUE
-				&& transitionType != GeofenceUtils.INVALID_INT_VALUE) {
+		if (lat != Constants.INVALID_FLOAT_VALUE
+				&& lng != Constants.INVALID_FLOAT_VALUE
+				&& radius != Constants.INVALID_FLOAT_VALUE
+				&& expirationDuration != Constants.INVALID_LONG_VALUE
+				&& transitionType != Constants.INVALID_INT_VALUE) {
 
 			// Return a true Geofence object
 			return new Ghost(id, lat, lng, radius, expirationDuration,
