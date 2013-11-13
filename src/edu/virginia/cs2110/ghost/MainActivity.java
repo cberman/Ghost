@@ -129,6 +129,7 @@ public class MainActivity extends MapActivity implements
 			mEditor.putBoolean("KEY_UPDATES_ON", false);
 			mEditor.commit();
 		}
+		super.onResume();
 	}
 
 	// Define a DialogFragment that displays the error dialog
