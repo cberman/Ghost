@@ -1,30 +1,32 @@
 // http://developer.android.com/google/play-services/setup.html
 package edu.virginia.cs2110.ghost;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-
-import android.location.Location;
-import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
+import android.location.Location;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.maps.MapActivity;
+import com.google.android.maps.MapView;
+
+public class MainActivity extends MapActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
-		GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
+		OnConnectionFailedListener, LocationListener {
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	private Location mCurrentLocation;
@@ -38,6 +40,12 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		//enables zoom
+		//won't let me create mapview, so i'm commenting it out for now
+		/*
+		 * MapView mapView = (MapView) findViewById(R.id.mapview);
+		 * mapView.setBuiltInZoomControls(true);
+		*/
 		// Open the shared preferences
 		mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
 		// Get a SharedPreferences editor
@@ -182,7 +190,7 @@ public class MainActivity extends FragmentActivity implements
 			// Set the dialog in the DialogFragment
 			errorFragment.setDialog(errorDialog);
 			// Show the error dialog in the DialogFragment
-			errorFragment.show(getSupportFragmentManager(), "Location Updates");
+			errorFragment.show(getFragmentManager(), "Location Updates");
 		}
 	}
 
@@ -275,6 +283,11 @@ public class MainActivity extends FragmentActivity implements
 				+ Double.toString(location.getLatitude()) + ","
 				+ Double.toString(location.getLongitude());
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		return false;
 	}
 
 }
