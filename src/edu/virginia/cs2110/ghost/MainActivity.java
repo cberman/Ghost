@@ -6,13 +6,16 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -25,12 +28,35 @@ public class MainActivity extends FragmentActivity implements
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	private Location mCurrentLocation;
+	// Define an object that holds accuracy and frequency parameters
+	LocationRequest mLocationRequest;
+	private boolean mUpdatesRequested;
+	private SharedPreferences mPrefs;
+	private SharedPreferences.Editor mEditor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		// Open the shared preferences
+		mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+		// Get a SharedPreferences editor
+		mEditor = mPrefs.edit();
+		/*
+		 * Create a new location client, using the enclosing class to handle
+		 * callbacks.
+		 */
 		mLocationClient = new LocationClient(this, this, this);
+		// Create the LocationRequest object
+		mLocationRequest = LocationRequest.create();
+		// Use high accuracy
+		mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+		// Set the update interval to 5 seconds
+		mLocationRequest.setInterval(Constants.UPDATE_INTERVAL);
+		// Set the fastest update interval to 1 second
+		mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
+		// Start with updates turned off
+		mUpdatesRequested = false;
 	}
 
 	@Override
@@ -49,20 +75,52 @@ public class MainActivity extends FragmentActivity implements
 		if (servicesConnected()) {
 			// Connect the client.
 			mLocationClient.connect();
-			mCurrentLocation = mLocationClient.getLastLocation();
-			double latitude = mCurrentLocation.getLatitude();
-			double longitude = mCurrentLocation.getLongitude();
 		}
 	}
 
 	/*
-	 * Called when the Activity is no longer visible.
+	 * Called when the Activity is no longer visible at all. Stop updates and
+	 * disconnect.
 	 */
 	@Override
 	protected void onStop() {
-		// Disconnecting the client invalidates it.
+		// If the client is connected
+		if (mLocationClient.isConnected()) {
+			/*
+			 * Remove location updates for a listener. The current Activity is
+			 * the listener, so the argument is "this".
+			 */
+			mLocationClient.removeLocationUpdates(this);
+		}
+		/*
+		 * After disconnect() is called, the client is considered "dead".
+		 */
 		mLocationClient.disconnect();
 		super.onStop();
+	}
+
+	@Override
+	protected void onPause() {
+		// Save the current setting for updates
+		mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
+		mEditor.commit();
+		super.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		/*
+		 * Get any previous setting for location updates Gets "false" if an
+		 * error occurs
+		 */
+		if (mPrefs.contains("KEY_UPDATES_ON")) {
+			mUpdatesRequested = mPrefs.getBoolean("KEY_UPDATES_ON", false);
+
+			// Otherwise, turn off location updates
+		} else {
+			mEditor.putBoolean("KEY_UPDATES_ON", false);
+			mEditor.commit();
+		}
 	}
 
 	// Define a DialogFragment that displays the error dialog
@@ -155,10 +213,14 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	@Override
 	public void onConnected(Bundle dataBundle) {
+		mCurrentLocation = mLocationClient.getLastLocation();
 		// Display the connection status
 		Toast.makeText(this, "Connected to Location Services",
-				Toast.LENGTH_SHORT).show();
-
+				Toast.LENGTH_LONG).show();
+		// If already requested, start periodic updates
+		if (mUpdatesRequested) {
+			mLocationClient.requestLocationUpdates(mLocationRequest, this);
+		}
 	}
 
 	/*

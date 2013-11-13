@@ -37,17 +37,17 @@ public final class Constants {
 	/*
 	 * Timing constants
 	 */
-    private static final int MILLISECONDS_PER_SECOND = 1000;
-    private static final long SECONDS_PER_HOUR = 60;
+    public static final int MILLISECONDS_PER_SECOND = 1000;
+    public static final long SECONDS_PER_HOUR = 60;
     public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
     // Update frequency in milliseconds
-    private static final long UPDATE_INTERVAL =
+    public static final long UPDATE_INTERVAL =
             MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
-    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
-    private static final long FASTEST_INTERVAL =
+    public static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+    public static final long FASTEST_INTERVAL =
             MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
-    private static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
-    private static final long GEOFENCE_EXPIRATION_TIME =
+    public static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
+    public static final long GEOFENCE_EXPIRATION_TIME =
             GEOFENCE_EXPIRATION_IN_HOURS *
             SECONDS_PER_HOUR *
             MILLISECONDS_PER_SECOND;
