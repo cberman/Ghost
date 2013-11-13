@@ -1,9 +1,13 @@
 // http://developer.android.com/google/play-services/setup.html
 package edu.virginia.cs2110.ghost;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -18,15 +22,19 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationStatusCodes;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
 public class MainActivity extends MapActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
-		OnConnectionFailedListener, LocationListener {
+		OnConnectionFailedListener, LocationListener,
+		OnAddGeofencesResultListener {
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	private Location mCurrentLocation;
@@ -35,6 +43,21 @@ public class MainActivity extends MapActivity implements
 	private boolean mUpdatesRequested;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mEditor;
+	// Internal List of Geofence objects
+	private List<Geofence> mGeofences;
+	// Persistent storage for ghosts
+	private GhostStore mGhosts;
+	// Stores the PendingIntent used to request geofence monitoring
+	private PendingIntent mTransitionPendingIntent;
+
+	// Defines the allowable request types.
+	public enum REQUEST_TYPE {
+		ADD
+	}
+
+	private REQUEST_TYPE mRequestType;
+	// Flag that indicates if a request is underway.
+	private boolean mInProgress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +89,12 @@ public class MainActivity extends MapActivity implements
 		mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
 		// Start with updates turned off
 		mUpdatesRequested = false;
+		// Instantiate a new geofence storage area
+		mGhosts = new GhostStore(this);
+		// Instantiate the current List of geofences
+		mGeofences = new ArrayList<Geofence>();
+		// Start with the request flag set to false
+		mInProgress = false;
 	}
 
 	@Override
@@ -243,6 +272,8 @@ public class MainActivity extends MapActivity implements
 		Toast.makeText(this,
 				"Disconnected from Location Services. Please re-connect.",
 				Toast.LENGTH_SHORT).show();
+		// Turn off the request flag
+		mInProgress = false;
 	}
 
 	/*
@@ -280,10 +311,11 @@ public class MainActivity extends MapActivity implements
 	// Define the callback method that receives location updates
 	@Override
 	public void onLocationChanged(Location location) {
+		mCurrentLocation = location;
 		// Report to the UI that the location was updated
 		String msg = "Updated Location: "
-				+ Double.toString(location.getLatitude()) + ","
-				+ Double.toString(location.getLongitude());
+				+ Double.toString(mCurrentLocation.getLatitude()) + ","
+				+ Double.toString(mCurrentLocation.getLongitude());
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
@@ -292,4 +324,98 @@ public class MainActivity extends MapActivity implements
 		return false;
 	}
 
+	private void createGhost() {
+		/*
+		 * Find an id that isn't in use
+		 */
+		int id = mGeofences.size();
+		while (mGhosts.getIDs().contains(Integer.toString(id)))
+			id++;
+		/*
+		 * Generate a random position
+		 */
+		double latitude = mCurrentLocation.getLatitude();
+		double longitude = mCurrentLocation.getLongitude();
+
+		Ghost ghost = new Ghost(Integer.toString(id), latitude, longitude,
+				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
+				// This geofence records only entry transitions
+				Geofence.GEOFENCE_TRANSITION_ENTER);
+		// Store this flat version
+		mGhosts.saveGhost(Integer.toString(id), ghost);
+		mGeofences.add(ghost.toGeofence());
+	}
+
+	/**
+	 * Start a request for geofence monitoring by calling
+	 * LocationClient.connect().
+	 */
+	public boolean addGeofences() {
+		// Start a request to add geofences
+		mRequestType = REQUEST_TYPE.ADD;
+		/*
+		 * Test for Google Play services after setting the request type. If
+		 * Google Play services isn't present, the proper request can be
+		 * restarted.
+		 */
+		if (!servicesConnected()) {
+			return false;
+		}
+		// If a request is not already underway
+		if (!mInProgress) {
+			// Indicate that a request is underway
+			mInProgress = true;
+			// Send a request to add the current geofences
+			// Get the PendingIntent for the request
+			mTransitionPendingIntent = getTransitionPendingIntent();
+			// Send a request to add the current geofences
+			mLocationClient.addGeofences(mGeofences, mTransitionPendingIntent,
+					this);
+		} else {
+			/*
+			 * A request is already underway. You can handle this situation by
+			 * disconnecting the client, re-setting the flag, and then re-trying
+			 * the request.
+			 */
+			return false;
+		}
+		return true;
+	}
+
+	/*
+	 * Create a PendingIntent that triggers an IntentService in your app when a
+	 * geofence transition occurs.
+	 */
+	private PendingIntent getTransitionPendingIntent() {
+		// No functionality yet
+		// Create an explicit Intent
+		Intent intent = new Intent();
+		/*
+		 * Return the PendingIntent
+		 */
+		return PendingIntent.getService(this, 0, intent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+	}
+
+	@Override
+	public void onAddGeofencesResult(int statusCode, String[] geofenceRequestIds) {
+		// If adding the geofences was successful
+		if (statusCode == LocationStatusCodes.SUCCESS) {
+			/*
+			 * Handle successful addition of geofences here. You can send out a
+			 * broadcast intent or update the UI. geofences into the Intent's
+			 * extended data.
+			 */
+		} else {
+			// If adding the geofences failed
+			/*
+			 * Report errors here. You can log the error using Log.e() or update
+			 * the UI.
+			 */
+			Log.e("Geofence", "unable to add geofence");
+		}
+		// Turn off the in progress flag
+		mInProgress = false;
+
+	}
 }

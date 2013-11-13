@@ -39,19 +39,22 @@ public final class Constants {
 	/*
 	 * Timing constants
 	 */
-    public static final int MILLISECONDS_PER_SECOND = 1000;
-    public static final long SECONDS_PER_HOUR = 60;
-    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
-    // Update frequency in milliseconds
-    public static final long UPDATE_INTERVAL =
-            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
-    public static final int FASTEST_INTERVAL_IN_SECONDS = 1;
-    public static final long FASTEST_INTERVAL =
-            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
-    public static final long GEOFENCE_EXPIRATION_IN_HOURS = 12;
-    public static final long GEOFENCE_EXPIRATION_TIME =
-            GEOFENCE_EXPIRATION_IN_HOURS *
-            SECONDS_PER_HOUR *
-            MILLISECONDS_PER_SECOND;
+	public static final int MILLISECONDS_PER_SECOND = 1000;
+	public static final long SECONDS_PER_HOUR = 60;
+	public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+	// Update frequency in milliseconds
+	public static final long UPDATE_INTERVAL = MILLISECONDS_PER_SECOND
+			* UPDATE_INTERVAL_IN_SECONDS;
+	public static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+	public static final long FASTEST_INTERVAL = MILLISECONDS_PER_SECOND
+			* FASTEST_INTERVAL_IN_SECONDS;
+
+	/*
+	 * Ghost constants
+	 */
+	public static final long GHOST_EXPIRATION_IN_HOURS = 12;
+	public static final long GHOST_EXPIRATION_TIME = GHOST_EXPIRATION_IN_HOURS
+			* SECONDS_PER_HOUR * MILLISECONDS_PER_SECOND;
+	public static final float GHOST_RADIUS = 10; // in meters
 
 }
