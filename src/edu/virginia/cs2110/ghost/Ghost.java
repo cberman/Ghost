@@ -1,4 +1,5 @@
 package edu.virginia.cs2110.ghost;
+
 //testing committing and pushing
 
 import com.google.android.gms.location.Geofence;
@@ -19,26 +20,40 @@ public class Ghost {
 
 	/**
 	 * @param geofenceId
-	 *            The Geofence's request ID
+	 *            The Geofence's request ID, can be up to 100 characters
 	 * @param latitude
-	 *            Latitude of the Geofence's center.
+	 *            Latitude of the Geofence's center in degrees, between -90 and
+	 *            +90 inclusive.
 	 * @param longitude
-	 *            Longitude of the Geofence's center.
+	 *            Longitude of the Geofence's center in degrees, between -90 and
+	 *            +90 inclusive.
 	 * @param radius
-	 *            Radius of the geofence circle.
+	 *            Radius of the geofence circle in meters.
 	 * @param expiration
-	 *            Geofence expiration duration
+	 *            Geofence expiration duration in milliseconds.
 	 * @param transition
 	 *            Type of Geofence transition.
+	 * @throws IllegalArgumentException
+	 *             if any parameters are out of range
 	 */
 	public Ghost(String geofenceId, double latitude, double longitude,
 			float radius, long expiration, int transition) {
 		// Set the instance fields from the constructor
+		if (geofenceId.length() > 100)
+			throw new IllegalArgumentException();
 		this.id = geofenceId;
+		if (latitude < -90 || latitude > 90)
+			throw new IllegalArgumentException();
 		this.latitude = latitude;
+		if (longitude < -90 || longitude > 90)
+			throw new IllegalArgumentException();
 		this.longitude = longitude;
 		this.radius = radius;
 		this.expirationDuration = expiration;
+		if (transitionType <= 0
+				|| transitionType > (Geofence.GEOFENCE_TRANSITION_DWELL
+						| Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT))
+			throw new IllegalArgumentException();
 		this.transitionType = transition;
 	}
 
@@ -68,7 +83,7 @@ public class Ghost {
 	}
 
 	/**
-	 * Creates a Location Services Geofence object from a SimpleGeofence.
+	 * Creates a Location Services Geofence object from a Ghost.
 	 * 
 	 * @return A Geofence object
 	 */

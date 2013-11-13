@@ -40,14 +40,15 @@ public class MainActivity extends MapActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//enables zoom
-		//won't let me create mapview, so i'm commenting it out for now
+		// enables zoom
+		// won't let me create mapview, so i'm commenting it out for now
 		/*
 		 * MapView mapView = (MapView) findViewById(R.id.mapview);
 		 * mapView.setBuiltInZoomControls(true);
-		*/
+		 */
 		// Open the shared preferences
-		mPrefs = getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
+				Context.MODE_PRIVATE);
 		// Get a SharedPreferences editor
 		mEditor = mPrefs.edit();
 		/*

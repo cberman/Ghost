@@ -32,7 +32,9 @@ public final class Constants {
 	public static final String EMPTY_STRING = new String();
 
 	public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
-	
+
+	// The name of the SharedPreferences
+	public static final String SHARED_PREFERENCES = "SharedPreferences";
 
 	/*
 	 * Timing constants
