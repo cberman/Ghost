@@ -1,4 +1,4 @@
-//testing making changes
+// http://developer.android.com/google/play-services/setup.html
 package edu.virginia.cs2110.ghost;
 
 import com.google.android.gms.common.ConnectionResult;
