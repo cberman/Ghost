@@ -25,6 +25,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationClient.OnAddGeofencesResultListener;
+import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationStatusCodes;
@@ -34,7 +35,7 @@ import com.google.android.maps.MapView;
 public class MainActivity extends MapActivity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		OnConnectionFailedListener, LocationListener,
-		OnAddGeofencesResultListener {
+		OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	private Location mCurrentLocation;
@@ -49,13 +50,6 @@ public class MainActivity extends MapActivity implements
 	private GhostStore mGhosts;
 	// Stores the PendingIntent used to request geofence monitoring
 	private PendingIntent mTransitionPendingIntent;
-
-	// Defines the allowable request types.
-	public enum REQUEST_TYPE {
-		ADD
-	}
-
-	private REQUEST_TYPE mRequestType;
 	// Flag that indicates if a request is underway.
 	private boolean mInProgress;
 
@@ -160,6 +154,12 @@ public class MainActivity extends MapActivity implements
 			mEditor.commit();
 		}
 		super.onResume();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
+		super.onDestroy();
 	}
 
 	// Define a DialogFragment that displays the error dialog
@@ -329,7 +329,7 @@ public class MainActivity extends MapActivity implements
 		 * Find an id that isn't in use
 		 */
 		int id = mGeofences.size();
-		while (mGhosts.getIDs().contains(Integer.toString(id)))
+		while (mGhosts.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
 		 * Generate a random position
@@ -351,8 +351,6 @@ public class MainActivity extends MapActivity implements
 	 * LocationClient.connect().
 	 */
 	public boolean addGeofences() {
-		// Start a request to add geofences
-		mRequestType = REQUEST_TYPE.ADD;
 		/*
 		 * Test for Google Play services after setting the request type. If
 		 * Google Play services isn't present, the proper request can be
@@ -371,6 +369,61 @@ public class MainActivity extends MapActivity implements
 			// Send a request to add the current geofences
 			mLocationClient.addGeofences(mGeofences, mTransitionPendingIntent,
 					this);
+		} else {
+			/*
+			 * A request is already underway. You can handle this situation by
+			 * disconnecting the client, re-setting the flag, and then re-trying
+			 * the request.
+			 */
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Start a request to remove geofences by calling LocationClient.connect()
+	 */
+	public boolean removeGeofences(PendingIntent requestIntent) {
+		/*
+		 * Test for Google Play services after setting the request type. If
+		 * Google Play services isn't present, the request can be restarted.
+		 */
+		if (!servicesConnected()) {
+			return false;
+		}
+		// If a request is not already underway
+		if (!mInProgress) {
+			// Indicate that a request is underway
+			mInProgress = true;
+			mLocationClient.removeGeofences(requestIntent, this);
+		} else {
+			/*
+			 * A request is already underway. You can handle this situation by
+			 * disconnecting the client, re-setting the flag, and then re-trying
+			 * the request.
+			 */
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Start a request to remove monitoring by calling LocationClient.connect()
+	 * 
+	 */
+	public boolean removeGeofences(List<String> geofenceIds) {
+		/*
+		 * Test for Google Play services after setting the request type. If
+		 * Google Play services isn't present, the request can be restarted.
+		 */
+		if (!servicesConnected()) {
+			return false;
+		}
+		// If a request is not already underway
+		if (!mInProgress) {
+			// Indicate that a request is underway
+			mInProgress = true;
+			mLocationClient.removeGeofences(geofenceIds, this);
 		} else {
 			/*
 			 * A request is already underway. You can handle this situation by
@@ -406,6 +459,12 @@ public class MainActivity extends MapActivity implements
 			 * broadcast intent or update the UI. geofences into the Intent's
 			 * extended data.
 			 */
+			for (String id : geofenceRequestIds) {
+				Ghost ghost = mGhosts.getGhost(id);
+				double latitude = ghost.getLatitude();
+				double longitude = ghost.getLongitude();
+				// Add the ghost to the map
+			}
 		} else {
 			// If adding the geofences failed
 			/*
@@ -417,5 +476,76 @@ public class MainActivity extends MapActivity implements
 		// Turn off the in progress flag
 		mInProgress = false;
 
+	}
+
+	/**
+	 * When the request to remove geofences by PendingIntent returns, handle the
+	 * result.
+	 * 
+	 * @param statusCode
+	 *            the code returned by Location Services
+	 * @param requestIntent
+	 *            The Intent used to request the removal.
+	 */
+	@Override
+	public void onRemoveGeofencesByPendingIntentResult(int statusCode,
+			PendingIntent requestIntent) {
+		// If removing the geofences was successful
+		if (statusCode == LocationStatusCodes.SUCCESS) {
+			/*
+			 * Handle successful removal of geofences here. You can send out a
+			 * broadcast intent or update the UI. geofences into the Intent's
+			 * extended data.
+			 */
+		} else {
+			// If adding the geocodes failed
+			/*
+			 * Report errors here. You can log the error using Log.e() or update
+			 * the UI.
+			 */
+			Log.e("Geofence", "unable to remove geofences by intent");
+		}
+		// Indicate that a request is no longer in progress
+		mInProgress = false;
+	}
+
+	/**
+	 * When the request to remove geofences by IDs returns, handle the result.
+	 * 
+	 * @param statusCode
+	 *            The code returned by Location Services
+	 * @param geofenceRequestIds
+	 *            The IDs removed
+	 */
+	@Override
+	public void onRemoveGeofencesByRequestIdsResult(int statusCode,
+			String[] geofenceRequestIds) {
+		// If removing the geocodes was successful
+		if (LocationStatusCodes.SUCCESS == statusCode) {
+			/*
+			 * Handle successful removal of geofences here. You can send out a
+			 * broadcast intent or update the UI. geofences into the Intent's
+			 * extended data.
+			 */
+			for(String id : geofenceRequestIds) {
+				for(Geofence g : mGeofences)
+					if(id != null && id.equals(g.getRequestId()))
+						mGeofences.remove(g);
+				Ghost ghost = mGhosts.getGhost(id);
+				double latitude = ghost.getLatitude();
+				double longitude = ghost.getLongitude();
+				// Remove the ghost from the map
+				mGhosts.clearGhost(id);
+			}
+		} else {
+			// If removing the geofences failed
+			/*
+			 * Report errors here. You can log the error using Log.e() or update
+			 * the UI.
+			 */
+			Log.e("Geofence", "unable to remove geofences by id");
+		}
+		// Indicate that a request is no longer in progress
+		mInProgress = false;
 	}
 }

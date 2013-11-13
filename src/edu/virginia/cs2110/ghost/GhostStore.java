@@ -132,7 +132,7 @@ public class GhostStore {
 		ids.remove(id);
 	}
 	
-	public Set<String> getIDs() {
+	public Set<String> getIds() {
 		return ids;
 	}
 
