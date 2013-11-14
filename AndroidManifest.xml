@@ -3,30 +3,33 @@
     package="edu.virginia.cs2110.ghost"
     android:versionCode="1"
     android:versionName="1.0" >
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
     <uses-sdk
         android:minSdkVersion="11"
         android:targetSdkVersion="19" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <uses-library android:name="com.google.android.maps"/>
         <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-
+    		android:name="com.google.android.maps.v2.API_KEY"
+    		android:value="AIzaSyD0cPcTNO5t5woXPGiU8tj7EYHTYCmwy3w"/>
         <activity
             android:name="edu.virginia.cs2110.ghost.MainActivity"
-            android:label="@string/app_name" 
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -33,7 +33,7 @@ import com.google.android.gms.location.LocationStatusCodes;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
 
-public class MainActivity extends MapActivity implements
+public class MainActivity extends Activity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		OnConnectionFailedListener, LocationListener,
 		OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
@@ -60,8 +60,6 @@ public class MainActivity extends MapActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		MapView mapView = (MapView) findViewById(R.id.mapview);
-		mapView.setBuiltInZoomControls(true);
 		// Open the shared preferences
 		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
 				Context.MODE_PRIVATE);
@@ -317,11 +315,6 @@ public class MainActivity extends MapActivity implements
 				+ Double.toString(mCurrentLocation.getLatitude()) + ","
 				+ Double.toString(mCurrentLocation.getLongitude());
 		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
 	}
 
 	private void createGhost() {
