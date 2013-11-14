@@ -56,5 +56,6 @@ public final class Constants {
 	public static final long GHOST_EXPIRATION_TIME = GHOST_EXPIRATION_IN_HOURS
 			* SECONDS_PER_HOUR * MILLISECONDS_PER_SECOND;
 	public static final float GHOST_RADIUS = 10; // in meters
+	public static final double METERS_PER_DEGREE = 111111;
 
 }

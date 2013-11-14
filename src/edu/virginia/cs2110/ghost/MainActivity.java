@@ -3,6 +3,7 @@ package edu.virginia.cs2110.ghost;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -52,6 +53,8 @@ public class MainActivity extends MapActivity implements
 	private PendingIntent mTransitionPendingIntent;
 	// Flag that indicates if a request is underway.
 	private boolean mInProgress;
+	// Used to generate ghost locations
+	private Random random;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class MainActivity extends MapActivity implements
 		mGeofences = new ArrayList<Geofence>();
 		// Start with the request flag set to false
 		mInProgress = false;
+		random = new Random(System.currentTimeMillis());
 	}
 
 	@Override
@@ -151,7 +155,7 @@ public class MainActivity extends MapActivity implements
 		}
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
@@ -332,6 +336,10 @@ public class MainActivity extends MapActivity implements
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
+		double radius = (random.nextGaussian() * 10 + 100)/Constants.METERS_PER_DEGREE;
+		double theta = random.nextDouble() * 2 * Math.PI;
+		latitude += radius * Math.cos(theta);
+		longitude += radius * Math.sin(theta) * Math.cos(latitude);
 
 		Ghost ghost = new Ghost(Integer.toString(id), latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
@@ -523,9 +531,9 @@ public class MainActivity extends MapActivity implements
 			 * broadcast intent or update the UI. geofences into the Intent's
 			 * extended data.
 			 */
-			for(String id : geofenceRequestIds) {
-				for(Geofence g : mGeofences)
-					if(id != null && id.equals(g.getRequestId()))
+			for (String id : geofenceRequestIds) {
+				for (Geofence g : mGeofences)
+					if (id != null && id.equals(g.getRequestId()))
 						mGeofences.remove(g);
 				Ghost ghost = mGhosts.getGhost(id);
 				double latitude = ghost.getLatitude();
