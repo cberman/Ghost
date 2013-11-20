@@ -30,8 +30,8 @@ import com.google.android.gms.location.LocationClient.OnRemoveGeofencesResultLis
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationStatusCodes;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
 
 public class MainActivity extends Activity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
@@ -55,12 +55,18 @@ public class MainActivity extends Activity implements
 	private boolean mInProgress;
 	// Used to generate ghost locations
 	private Random random;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// Open the shared preferences
+		GoogleMap map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+		map.setMyLocationEnabled(true);
+		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 13));
+		
 		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
 				Context.MODE_PRIVATE);
 		// Get a SharedPreferences editor
