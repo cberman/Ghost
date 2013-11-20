@@ -5,5 +5,10 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="description">splash screen image</string>
+    <string name="uva">University of Virginia</string>
+    <string name="course">CS2110, Fall 2013</string>
+    <string name="names1">Collin Berman, Matthew Chan,</string>
+    <string name="names2">Madeleine Fleshman, and</string>
+    <string name="names3">Grace McAden</string>
 
 </resources>
