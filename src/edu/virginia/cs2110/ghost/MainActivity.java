@@ -476,6 +476,10 @@ public class MainActivity extends Activity implements
 				double latitude = ghost.getLatitude();
 				double longitude = ghost.getLongitude();
 				// Add the ghost to the map
+				map.addMarker(new MarkerOptions()
+	                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ghost))
+	                .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
+	                .position(new LatLng(latitude, longitude)));
 			}
 		} else {
 			// If adding the geofences failed
