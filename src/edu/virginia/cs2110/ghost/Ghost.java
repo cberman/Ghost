@@ -2,6 +2,8 @@ package edu.virginia.cs2110.ghost;
 
 //testing committing and pushing
 
+import android.util.Log;
+
 import com.google.android.gms.location.Geofence;
 
 /**
@@ -54,7 +56,8 @@ public class Ghost {
 		if (transitionType <= 0
 				|| transitionType > (Geofence.GEOFENCE_TRANSITION_DWELL
 						| Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT))
-			throw new IllegalArgumentException();
+			//throw new IllegalArgumentException();
+			Log.d("ghostGeneration", "transition");
 		this.transitionType = transition;
 		this.vulnerable = vulnerable;
 	}

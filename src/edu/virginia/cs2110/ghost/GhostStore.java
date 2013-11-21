@@ -86,8 +86,7 @@ public class GhostStore {
 				&& lng != Constants.INVALID_FLOAT_VALUE
 				&& radius != Constants.INVALID_FLOAT_VALUE
 				&& expirationDuration != Constants.INVALID_LONG_VALUE
-				&& transitionType != Constants.INVALID_INT_VALUE
-				&& vulnerable != Constants.INVALID_BOOLEAN_VALUE) {
+				&& transitionType != Constants.INVALID_INT_VALUE) {
 
 			// Return a true ghost object
 			return new Ghost(id, lat, lng, radius, expirationDuration,

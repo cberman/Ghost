@@ -261,6 +261,7 @@ public class MainActivity extends Activity implements
 		Toast.makeText(this, "Connected to Location Services",
 				Toast.LENGTH_LONG).show();
 		// If already requested, start periodic updates
+		createGhost();
 		addGeofences();
 		if (mUpdatesRequested) {
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
@@ -334,7 +335,7 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGeofences.size();
+		int id = mGeofences.size()+1;
 		while (mGhosts.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
@@ -346,7 +347,7 @@ public class MainActivity extends Activity implements
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
-
+		Log.d("ghostGeneration", "id: "+id+"; lat: "+latitude+"; long: "+longitude);
 		Ghost ghost = new Ghost(Integer.toString(id), latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
