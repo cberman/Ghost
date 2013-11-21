@@ -86,7 +86,9 @@ public class MainActivity extends Activity implements
 		// Set the fastest update interval to 1 second
 		mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
 		// Start with updates turned off
-		mUpdatesRequested = true;
+		mUpdatesRequested = false;
+		mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
+		mEditor.commit();
 		// Instantiate a new geofence storage area
 		mGhosts = new GhostStore(this);
 		// Instantiate the current List of geofences
@@ -121,18 +123,12 @@ public class MainActivity extends Activity implements
 	 */
 	@Override
 	protected void onStop() {
-		// If the client is connected
 		if (mLocationClient.isConnected()) {
 			/*
-			 * Remove location updates for a listener. The current Activity is
-			 * the listener, so the argument is "this".
+			 * After disconnect() is called, the client is considered "dead".
 			 */
-			mLocationClient.removeLocationUpdates(this);
+			mLocationClient.disconnect();
 		}
-		/*
-		 * After disconnect() is called, the client is considered "dead".
-		 */
-		mLocationClient.disconnect();
 		super.onStop();
 	}
 
@@ -163,7 +159,6 @@ public class MainActivity extends Activity implements
 
 	@Override
 	protected void onDestroy() {
-		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
 		super.onDestroy();
 	}
 
@@ -265,6 +260,7 @@ public class MainActivity extends Activity implements
 		Toast.makeText(this, "Connected to Location Services",
 				Toast.LENGTH_LONG).show();
 		// If already requested, start periodic updates
+		addGeofences();
 		if (mUpdatesRequested) {
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 		}
@@ -280,6 +276,12 @@ public class MainActivity extends Activity implements
 		Toast.makeText(this,
 				"Disconnected from Location Services. Please re-connect.",
 				Toast.LENGTH_SHORT).show();
+		/*
+		 * Remove location updates for a listener. The current Activity is
+		 * the listener, so the argument is "this".
+		 */
+		mLocationClient.removeLocationUpdates(this);
+		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
 		// Turn off the request flag
 		mInProgress = false;
 	}
@@ -366,6 +368,8 @@ public class MainActivity extends Activity implements
 		if (!servicesConnected()) {
 			return false;
 		}
+		if(mGeofences.size() == 0)
+			return true;
 		// If a request is not already underway
 		if (!mInProgress) {
 			// Indicate that a request is underway
