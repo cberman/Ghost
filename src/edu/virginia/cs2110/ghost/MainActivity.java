@@ -478,7 +478,7 @@ public class MainActivity extends Activity implements
 				// Add the ghost to the map
 				map.addMarker(new MarkerOptions()
 	                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ghost))
-	                .anchor(0.0f, 1.0f) // Anchors the marker on the bottom left
+	                .anchor(0.0f, 1.0f) 
 	                .position(new LatLng(latitude, longitude)));
 			}
 		} else {
