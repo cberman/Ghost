@@ -63,9 +63,6 @@ public class MainActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
-		map.setMyLocationEnabled(true);
-		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		
 		// Open the shared preferences
 		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
@@ -85,8 +82,8 @@ public class MainActivity extends Activity implements
 		mLocationRequest.setInterval(Constants.UPDATE_INTERVAL);
 		// Set the fastest update interval to 1 second
 		mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
-		// Start with updates turned off
-		mUpdatesRequested = false;
+		// Start with updates turned on
+		mUpdatesRequested = true;
 		mEditor.putBoolean("KEY_UPDATES_ON", mUpdatesRequested);
 		mEditor.commit();
 		// Instantiate a new geofence storage area
@@ -253,6 +250,10 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		mCurrentLocation = mLocationClient.getLastLocation();
+
+		map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		map.setMyLocationEnabled(true);
+		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 13));
 		
