@@ -8,6 +8,7 @@ public final class Constants {
 	public static final float INVALID_FLOAT_VALUE = -999.0f;
 
 	public static final int INVALID_INT_VALUE = -999;
+	public static final boolean INVALID_BOOLEAN_VALUE = false;
 
 	/*
 	 * Constants used in verifying the correctness of input values

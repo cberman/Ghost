@@ -78,16 +78,16 @@ public class GhostStore {
 		 * Get the vulnerability for the ghost identified by id, or
 		 * INVALID_INT_VALUE if it doesn't exist
 		 */
-		int vulnerable = preferences.getBoolean(
+		boolean vulnerable = preferences.getBoolean(
 				getGhostFieldKey(id, KEY_VULNERABLE),
-				Constants.INVALID_INT_VALUE);
+				Constants.INVALID_BOOLEAN_VALUE);
 		// If none of the values is incorrect, return the object
 		if (lat != Constants.INVALID_FLOAT_VALUE
 				&& lng != Constants.INVALID_FLOAT_VALUE
 				&& radius != Constants.INVALID_FLOAT_VALUE
 				&& expirationDuration != Constants.INVALID_LONG_VALUE
 				&& transitionType != Constants.INVALID_INT_VALUE
-				&& vulnerable != Constants.INVALID_FLOAT_VALUE) {
+				&& vulnerable != Constants.INVALID_BOOLEAN_VALUE) {
 
 			// Return a true ghost object
 			return new Ghost(id, lat, lng, radius, expirationDuration,
