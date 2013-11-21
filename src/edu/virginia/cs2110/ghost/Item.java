@@ -35,7 +35,7 @@ public class Item {
 	 * @throws IllegalArgumentException
 	 *             if any parameters are out of range
 	 */
-	public Ghost(String geofenceId, double latitude, double longitude,
+	public Item(String geofenceId, double latitude, double longitude,
 			float radius, long expiration, int transition) {
 		// Set the instance fields from the constructor
 		if (geofenceId.length() > 100)
@@ -80,3 +80,4 @@ public class Item {
 	public int getTransitionType() {
 		return transitionType;
 	}
+}
