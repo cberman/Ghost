@@ -56,17 +56,18 @@ public class MainActivity extends Activity implements
 	// Used to generate ghost locations
 	private Random random;
 	
+	private GoogleMap map;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		// Open the shared preferences
-		GoogleMap map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
-		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+		
+		map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 13));
 		
+		// Open the shared preferences
 		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
 				Context.MODE_PRIVATE);
 		// Get a SharedPreferences editor
@@ -85,7 +86,7 @@ public class MainActivity extends Activity implements
 		// Set the fastest update interval to 1 second
 		mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
 		// Start with updates turned off
-		mUpdatesRequested = false;
+		mUpdatesRequested = true;
 		// Instantiate a new geofence storage area
 		mGhosts = new GhostStore(this);
 		// Instantiate the current List of geofences
@@ -257,6 +258,9 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		mCurrentLocation = mLocationClient.getLastLocation();
+		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 13));
+		
 		// Display the connection status
 		Toast.makeText(this, "Connected to Location Services",
 				Toast.LENGTH_LONG).show();
