@@ -350,7 +350,7 @@ public class MainActivity extends Activity implements
 		Ghost ghost = new Ghost(Integer.toString(id), latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
-				Geofence.GEOFENCE_TRANSITION_ENTER);
+				Geofence.GEOFENCE_TRANSITION_ENTER, false);
 		// Store this flat version
 		mGhosts.saveGhost(Integer.toString(id), ghost);
 		mGeofences.add(ghost.toGeofence());
