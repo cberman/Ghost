@@ -19,6 +19,7 @@ public class GhostStore {
 	private static final String KEY_RADIUS = "edu.virginia.cs2110.ghost.KEY_RADIUS";
 	private static final String KEY_EXPIRATION_DURATION = "edu.virginia.cs2110.ghost.KEY_EXPIRATION_DURATION";
 	private static final String KEY_TRANSITION_TYPE = "edu.virginia.cs2110.ghost.KEY_TRANSITION_TYPE";
+	private static final String KEY_VULNERABLE = "edu.virginia.cs2110.ghost.KEY_VULNERABLE";
 	// The prefix for flattened ghost keys
 	private static final String KEY_PREFIX = "edu.virginia.cs2110.ghost.KEY";
 	// The SharedPreferences object in which ghosts are stored
@@ -73,16 +74,24 @@ public class GhostStore {
 		int transitionType = preferences.getInt(
 				getGhostFieldKey(id, KEY_TRANSITION_TYPE),
 				Constants.INVALID_INT_VALUE);
+		/*
+		 * Get the vulnerability for the ghost identified by id, or
+		 * INVALID_INT_VALUE if it doesn't exist
+		 */
+		int vulnerable = preferences.getBoolean(
+				getGhostFieldKey(id, KEY_VULNERABLE),
+				Constants.INVALID_INT_VALUE);
 		// If none of the values is incorrect, return the object
 		if (lat != Constants.INVALID_FLOAT_VALUE
 				&& lng != Constants.INVALID_FLOAT_VALUE
 				&& radius != Constants.INVALID_FLOAT_VALUE
 				&& expirationDuration != Constants.INVALID_LONG_VALUE
-				&& transitionType != Constants.INVALID_INT_VALUE) {
+				&& transitionType != Constants.INVALID_INT_VALUE
+				&& vulnerable != Constants.INVALID_FLOAT_VALUE) {
 
 			// Return a true ghost object
 			return new Ghost(id, lat, lng, radius, expirationDuration,
-					transitionType);
+					transitionType, vulnerable);
 			// Otherwise, return null.
 		} else {
 			return null;
