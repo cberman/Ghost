@@ -17,6 +17,7 @@ public class Ghost {
 	private final float radius;
 	private long expirationDuration;
 	private int transitionType;
+	private boolean vulnerable;
 
 	/**
 	 * @param geofenceId
@@ -37,7 +38,7 @@ public class Ghost {
 	 *             if any parameters are out of range
 	 */
 	public Ghost(String geofenceId, double latitude, double longitude,
-			float radius, long expiration, int transition) {
+			float radius, long expiration, int transition, boolean vulnerable) {
 		// Set the instance fields from the constructor
 		if (geofenceId.length() > 100)
 			throw new IllegalArgumentException();
@@ -55,6 +56,7 @@ public class Ghost {
 						| Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT))
 			throw new IllegalArgumentException();
 		this.transitionType = transition;
+		this.vulnerable = vulnerable;
 	}
 
 	// Instance field getters
@@ -62,6 +64,10 @@ public class Ghost {
 		return id;
 	}
 
+	public boolean getVulnerable() {
+		return vulnerable;
+	}
+	
 	public double getLatitude() {
 		return latitude;
 	}
