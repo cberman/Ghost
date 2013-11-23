@@ -38,9 +38,9 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
 public class MainActivity extends Activity implements
-GooglePlayServicesClient.ConnectionCallbacks,
-OnConnectionFailedListener, LocationListener,
-OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
+		GooglePlayServicesClient.ConnectionCallbacks,
+		OnConnectionFailedListener, LocationListener,
+		OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	Location mCurrentLocation;
@@ -113,23 +113,27 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.action_camera:
-			Intent i = new Intent(this, CameraActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putDouble("latitude", mCurrentLocation.getLatitude());
-			bundle.putDouble("longitude", mCurrentLocation.getLongitude());
-			double[] ghostLats = new double[mGhosts.getIds().size()];
-			double[] ghostLongs = new double[mGhosts.getIds().size()];
-			int index = 0;
-			for (String id : mGhosts.getIds()) {
-				Ghost g = mGhosts.getGhost(id);
-				ghostLats[index] = g.getLatitude();
-				ghostLongs[index] = g.getLongitude();
-				index++;
-			}
-			bundle.putDoubleArray("ghostLats", ghostLats);
-			bundle.putDoubleArray("ghostLongs", ghostLongs);
-			i.putExtras(bundle);
-			startActivity(i);
+			if (CameraView.checkCameraHardware(this)) {
+				Intent i = new Intent(this, CameraActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putDouble("latitude", mCurrentLocation.getLatitude());
+				bundle.putDouble("longitude", mCurrentLocation.getLongitude());
+				double[] ghostLats = new double[mGhosts.getIds().size()];
+				double[] ghostLongs = new double[mGhosts.getIds().size()];
+				int index = 0;
+				for (String id : mGhosts.getIds()) {
+					Ghost g = mGhosts.getGhost(id);
+					ghostLats[index] = g.getLatitude();
+					ghostLongs[index] = g.getLongitude();
+					index++;
+				}
+				bundle.putDoubleArray("ghostLats", ghostLats);
+				bundle.putDoubleArray("ghostLongs", ghostLongs);
+				i.putExtras(bundle);
+				startActivity(i);
+			} else
+				Toast.makeText(this, "No camera on this device",
+						Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.action_settings:
 			return true;
@@ -547,9 +551,9 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 					Bitmap scaled = Bitmap.createScaledBitmap(bm,
 							bm.getWidth() / 2, bm.getHeight() / 2, false);
 					map.addMarker(new MarkerOptions()
-					.icon(BitmapDescriptorFactory.fromBitmap(scaled))
-					.anchor(0.5f, 0.5f)
-					.position(new LatLng(latitude, longitude)));
+							.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+							.anchor(0.5f, 0.5f)
+							.position(new LatLng(latitude, longitude)));
 				}
 				if (Integer.parseInt(id) > 100) {
 					Item item = mItems.getItem(id);
@@ -577,9 +581,9 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 					Bitmap scaled = Bitmap.createScaledBitmap(bm,
 							bm.getWidth() / 2, bm.getHeight() / 2, false);
 					map.addMarker(new MarkerOptions()
-					.icon(BitmapDescriptorFactory.fromBitmap(scaled))
-					.anchor(0.5f, 0.5f)
-					.position(new LatLng(latitude, longitude)));
+							.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+							.anchor(0.5f, 0.5f)
+							.position(new LatLng(latitude, longitude)));
 				}
 
 			}

@@ -88,7 +88,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 	/** Check if this device has a camera */
-	private boolean checkCameraHardware(Context context) {
+	public static boolean checkCameraHardware(Context context) {
 		if (context.getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_CAMERA)) {
 			// this device has a camera
