@@ -569,13 +569,8 @@ public class MainActivity extends Activity implements
 								R.drawable.bomb);
 					}
 
-					if (Integer.parseInt(id) > 200
-							&& Integer.parseInt(id) <= 300) {
-						bm = BitmapFactory.decodeResource(getResources(),
-								R.drawable.dogbone);
-					}
 
-					if (Integer.parseInt(id) > 300) {
+					if (Integer.parseInt(id) > 200) {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.dollarsign);
 					}
