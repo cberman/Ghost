@@ -11,5 +11,6 @@
     <string name="names1">Collin Berman, Matthew Chan,</string>
     <string name="names2">Madeleine Fleshman, and</string>
     <string name="names3">Grace McAden</string>
+    <string name="score_bar">edit text</string>
 
 </resources>
