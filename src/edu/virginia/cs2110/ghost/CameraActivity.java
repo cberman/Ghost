@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,7 +20,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	private CameraView mView;
 	private SensorManager mSensorManager;
 	private float[] orientation;
-	private ImageView overlay;
+	private ImageView[] overlay;
 
 	private double latitude, longitude;
 	private double[] ghostLats, ghostLongs;
@@ -36,6 +37,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
 		Bundle extras = getIntent().getExtras();
 		latitude = extras.getDouble("latitude");
 		longitude = extras.getDouble("longitude");
+		ghostLats = extras.getDoubleArray("ghostLats");
+		ghostLongs = extras.getDoubleArray("ghostLongs");
 
 		setContentView(R.layout.activity_camera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
@@ -44,10 +47,13 @@ public class CameraActivity extends Activity implements SensorEventListener {
 		mView = new CameraView(this);
 		preview.addView(mView);
 
-		overlay = new ImageView(this);
-		overlay.setImageResource(R.drawable.ghost);
-		overlay.setScaleType(ScaleType.MATRIX);
-		preview.addView(overlay);
+		overlay = new ImageView[ghostLongs.length];
+		for (int i = 0; i < overlay.length; i++) {
+			overlay[i] = new ImageView(this);
+			overlay[i].setImageResource(R.drawable.ghost);
+			overlay[i].setScaleType(ScaleType.MATRIX);
+			preview.addView(overlay[i]);
+		}
 	}
 
 	@Override
@@ -76,23 +82,27 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	public void onSensorChanged(SensorEvent event) {
 		synchronized (this) {
 			if (event.sensor.getType() == Sensor.TYPE_ORIENTATION) {
-
-				float ghostWidth = overlay.getDrawable().getBounds().width();
-				float ghostHeight = overlay.getDrawable().getBounds().height();
-
 				orientation = event.values;
 
-				Matrix matrix = new Matrix();
-				matrix.postRotate(orientation[2], ghostWidth / 2,
-						ghostHeight / 2);
-				// Scale should be based on distance to ghost
-				matrix.postScale(.75f, .75f, ghostWidth / 2, ghostHeight / 2);
-				matrix.postTranslate(
-						(((ghostAngle - orientation[0] + 180) % 360f) - 180)
-								* ghostWidth / 30,
-						(((-90 - orientation[1] + 180) % 360f) - 180)
-								* ghostHeight / 40);
-				overlay.setImageMatrix(matrix);
+				for (int i = 0; i < overlay.length; i++) {
+					float ghostWidth = overlay[i].getDrawable().getBounds()
+							.width();
+					float ghostHeight = overlay[i].getDrawable().getBounds()
+							.height();
+
+					Matrix matrix = new Matrix();
+					matrix.postRotate(orientation[2], ghostWidth / 2,
+							ghostHeight / 2);
+					// Scale should be based on distance to ghost
+					matrix.postScale(.75f, .75f, ghostWidth / 2,
+							ghostHeight / 2);
+					matrix.postTranslate(
+							(((ghostAngle(i) - orientation[0] + 180) % 360f) - 180)
+									* ghostWidth / 30,
+							(((-90 - orientation[1] + 180) % 360f) - 180)
+									* ghostHeight / 40);
+					overlay[i].setImageMatrix(matrix);
+				}
 			}
 		}
 	}
