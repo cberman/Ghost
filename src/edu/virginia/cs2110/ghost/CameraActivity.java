@@ -25,9 +25,6 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	private double latitude, longitude;
 	private double[] ghostLats, ghostLongs;
 
-	// Angle between north and ghost, in degrees
-	private final float ghostAngle = 300; // Test value
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -135,6 +132,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
 		double x = Math.cos(latitude) * Math.sin(ghostLat) - Math.sin(latitude)
 				* Math.cos(ghostLat) * Math.cos(dLon);
 		double bearing = Math.toDegrees(Math.atan2(y, x));
+		if (!mView.facingBack)
+			bearing = (bearing + 180) % 360.0;
 		return (float) bearing;
 	}
 }
