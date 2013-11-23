@@ -13,16 +13,23 @@ import android.view.SurfaceView;
 public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 	private SurfaceHolder mHolder;
 	private Camera mCamera;
+	
+	public boolean facingBack;
 
 	public CameraView(Context context) {
 		super(context);
 
-		if (!checkCameraHardware(context))
+		if (!checkCameraHardware(context)) {
+			Log.e("CameraView", "No camera found");
 			throw new RuntimeException();
+		}
 
 		mCamera = getCameraFacingBack();
-		if (mCamera == null)
+		facingBack = true;
+		if (mCamera == null) {
+			facingBack = false;
 			mCamera = getCameraInstance();
+		}
 
 		// Set the orientation of the camera to portrait
 		mCamera.setDisplayOrientation(90);
