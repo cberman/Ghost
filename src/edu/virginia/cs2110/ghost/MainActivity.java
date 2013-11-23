@@ -542,7 +542,7 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 			 * extended data.
 			 */
 			for (String id : geofenceRequestIds) {
-				if (Integer.parseInt("id") <= 100) {
+				if (Integer.parseInt(id) <= 100) {
 					Ghost ghost = mGhosts.getGhost(id);
 					double latitude = ghost.getLatitude();
 					double longitude = ghost.getLongitude();
@@ -556,25 +556,25 @@ OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 					.anchor(0.5f, 0.5f)
 					.position(new LatLng(latitude, longitude)));
 				}
-				if (Integer.parseInt("id") > 100) {
+				if (Integer.parseInt(id) > 100) {
 					Item item = mItems.getItem(id);
 					double latitude = item.getLatitude();
 					double longitude = item.getLongitude();
 					// Add the ghost to the map
-					Bitmap bm;
+					Bitmap bm = null;
 
-					if (Integer.parseInt("id") <= 200) {
+					if (Integer.parseInt(id) <= 200) {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.bomb);
 					}
 
-					if (Integer.parseInt("id") > 200
-							&& Integer.parseInt("id") <= 300) {
+					if (Integer.parseInt(id) > 200
+							&& Integer.parseInt(id) <= 300) {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.dogbone);
 					}
 
-					if (Integer.parseInt("id") > 300) {
+					if (Integer.parseInt(id) > 300) {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.dollarsign);
 					}
