@@ -293,7 +293,7 @@ public class MainActivity extends Activity implements
 		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),
 				mCurrentLocation.getLongitude());
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 13));
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
 
 		// Display the connection status
 		Toast.makeText(this, "Connected to Location Services",
