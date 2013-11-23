@@ -51,6 +51,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="edu.virginia.cs2110.ghost.CameraActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>
