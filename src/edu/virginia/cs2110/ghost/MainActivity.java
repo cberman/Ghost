@@ -401,7 +401,7 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGeofences.size()+1;
+		int id = mGeofences.size()+ 100* (1 + (int)(Math.random() * ((3 - 1) + 1)));
 		while (mItems.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
