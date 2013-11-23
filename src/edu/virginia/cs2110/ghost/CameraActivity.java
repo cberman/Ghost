@@ -2,12 +2,14 @@ package edu.virginia.cs2110.ghost;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Matrix;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -86,5 +88,19 @@ public class CameraActivity extends Activity implements SensorEventListener {
 				overlay.setImageMatrix(matrix);
 			}
 		}
+	}
+	
+	/**
+	 * When the back button is pressed, return to map
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+			Intent i = new Intent(this, MainActivity.class);
+			startActivity(i);
+	        return true;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
 	}
 }
