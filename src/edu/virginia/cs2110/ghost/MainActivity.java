@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -477,9 +479,11 @@ public class MainActivity extends Activity implements
 				double latitude = ghost.getLatitude();
 				double longitude = ghost.getLongitude();
 				// Add the ghost to the map
+				Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
+				Bitmap scaled = Bitmap.createScaledBitmap(bm, bm.getWidth()/2,bm.getHeight()/2, false);
 				map.addMarker(new MarkerOptions()
-	                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ghost))
-	                .anchor(0.0f, 1.0f) 
+	                .icon(BitmapDescriptorFactory.fromBitmap(scaled))
+	                .anchor(0.5f, 0.5f) 
 	                .position(new LatLng(latitude, longitude)));
 			}
 		} else {
