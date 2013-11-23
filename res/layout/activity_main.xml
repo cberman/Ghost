@@ -56,6 +56,8 @@
             android:layout_height="44dp"
             android:layout_gravity="right"
             android:layout_marginRight="100dp"
+            android:clickable="true"
+            android:onClick="useBomb"
             android:src="@drawable/bomb" />
     </FrameLayout>
 

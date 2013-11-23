@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -299,9 +300,6 @@ public class MainActivity extends Activity implements
 				mCurrentLocation.getLongitude());
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
 
-		// Display the connection status
-		Toast.makeText(this, "Connected to Location Services",
-				Toast.LENGTH_LONG).show();
 		// If already requested, start periodic updates
 		createGhost();
 		addGeofences();
@@ -423,6 +421,10 @@ public class MainActivity extends Activity implements
 		// Store this flat version
 		mItems.saveItem(Integer.toString(id), item);
 		mGeofences.add(item.toGeofence());
+	}
+	
+	public void useBomb(View v) {
+		Toast.makeText(this,  "Bomb!", Toast.LENGTH_SHORT).show();
 	}
 
 	/**
