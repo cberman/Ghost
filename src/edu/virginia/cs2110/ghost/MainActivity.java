@@ -362,11 +362,6 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onLocationChanged(Location location) {
 		mCurrentLocation = location;
-		// Report to the UI that the location was updated
-		String msg = "Updated Location: "
-				+ Double.toString(mCurrentLocation.getLatitude()) + ","
-				+ Double.toString(mCurrentLocation.getLongitude());
-		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	private void createGhost() {
