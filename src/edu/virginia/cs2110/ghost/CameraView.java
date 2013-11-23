@@ -16,11 +16,16 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public CameraView(Context context) {
 		super(context);
-		
-		if(!checkCameraHardware(context))
+
+		if (!checkCameraHardware(context))
 			throw new RuntimeException();
+
+		mCamera = getCameraFacingBack();
+		if (mCamera == null)
+			mCamera = getCameraInstance();
 		
-		mCamera = getCameraInstance();
+		// Set the orientation of the camera to portrait
+		mCamera.setDisplayOrientation(90);
 
 		// Install a SurfaceHolder.Callback so we get notified when the
 		// underlying surface is created and destroyed.
@@ -74,27 +79,50 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 			Log.d("Camera", "Error starting camera preview: " + e.getMessage());
 		}
 	}
-	
+
 	/** Check if this device has a camera */
 	private boolean checkCameraHardware(Context context) {
-	    if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-	        // this device has a camera
-	        return true;
-	    } else {
-	        // no camera on this device
-	        return false;
-	    }
+		if (context.getPackageManager().hasSystemFeature(
+				PackageManager.FEATURE_CAMERA)) {
+			// this device has a camera
+			return true;
+		} else {
+			// no camera on this device
+			return false;
+		}
 	}
-	
+
 	/** A safe way to get an instance of the Camera object. */
-	private static Camera getCameraInstance(){
-	    Camera c = null;
-	    try {
-	        c = Camera.open(); // attempt to get a Camera instance
-	    }
-	    catch (Exception e){
-	        // Camera is not available (in use or does not exist)
-	    }
-	    return c; // returns null if camera is unavailable
+	private static Camera getCameraInstance() {
+		Camera c = null;
+		try {
+			c = Camera.open(); // attempt to get a Camera instance
+		} catch (Exception e) {
+			// Camera is not available (in use or does not exist)
+		}
+		return c; // returns null if camera is unavailable
+	}
+
+	/** A safe way to get an instance of a specific Camera object. */
+	private static Camera getCameraInstance(int cameraId) {
+		Camera c = null;
+		try {
+			c = Camera.open(cameraId); // attempt to get a Camera instance
+		} catch (Exception e) {
+			// Camera is not available (in use or does not exist)
+		}
+		return c; // returns null if camera is unavailable
+	}
+
+	/** Get the first back-facing camera */
+	private static Camera getCameraFacingBack() {
+		int cameras = Camera.getNumberOfCameras();
+		Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+		for (int cameraId = 0; cameraId < cameras; cameraId++) {
+			Camera.getCameraInfo(cameraId, cameraInfo);
+			if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK)
+				return getCameraInstance(cameraId);
+		}
+		return null;
 	}
 }
