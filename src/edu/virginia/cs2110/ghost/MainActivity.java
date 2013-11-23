@@ -1,5 +1,6 @@
 // http://developer.android.com/google/play-services/setup.html
 package edu.virginia.cs2110.ghost;
+
 //testing changes 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -57,15 +59,14 @@ public class MainActivity extends Activity implements
 	private boolean mInProgress;
 	// Used to generate ghost locations
 	private Random random;
-	
+
 	private GoogleMap map;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		
+
 		// Open the shared preferences
 		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
 				Context.MODE_PRIVATE);
@@ -102,6 +103,21 @@ public class MainActivity extends Activity implements
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.action_camera:
+			Intent i = new Intent(this, CameraActivity.class);
+			startActivity(i);
+			return true;
+		case R.id.action_settings:
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	/*
@@ -253,12 +269,14 @@ public class MainActivity extends Activity implements
 	public void onConnected(Bundle dataBundle) {
 		mCurrentLocation = mLocationClient.getLastLocation();
 
-		map = ((MapFragment)getFragmentManager().findFragmentById(R.id.map)).getMap();
+		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
+				.getMap();
 		map.setMyLocationEnabled(true);
 		map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
+		LatLng myLocation = new LatLng(mCurrentLocation.getLatitude(),
+				mCurrentLocation.getLongitude());
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 13));
-		
+
 		// Display the connection status
 		Toast.makeText(this, "Connected to Location Services",
 				Toast.LENGTH_LONG).show();
@@ -281,8 +299,8 @@ public class MainActivity extends Activity implements
 				"Disconnected from Location Services. Please re-connect.",
 				Toast.LENGTH_SHORT).show();
 		/*
-		 * Remove location updates for a listener. The current Activity is
-		 * the listener, so the argument is "this".
+		 * Remove location updates for a listener. The current Activity is the
+		 * listener, so the argument is "this".
 		 */
 		mLocationClient.removeLocationUpdates(this);
 		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
@@ -337,7 +355,7 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGeofences.size()+1;
+		int id = mGeofences.size() + 1;
 		while (mGhosts.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
@@ -345,11 +363,13 @@ public class MainActivity extends Activity implements
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		double radius = (random.nextGaussian() * 10 + 100)/Constants.METERS_PER_DEGREE;
+		double radius = (random.nextGaussian() * 10 + 100)
+				/ Constants.METERS_PER_DEGREE;
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
-		Log.d("ghostGeneration", "id: "+id+"; lat: "+latitude+"; long: "+longitude);
+		Log.d("ghostGeneration", "id: " + id + "; lat: " + latitude
+				+ "; long: " + longitude);
 		Ghost ghost = new Ghost(Integer.toString(id), latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
@@ -372,7 +392,7 @@ public class MainActivity extends Activity implements
 		if (!servicesConnected()) {
 			return false;
 		}
-		if(mGeofences.size() == 0)
+		if (mGeofences.size() == 0)
 			return true;
 		// If a request is not already underway
 		if (!mInProgress) {
@@ -479,12 +499,14 @@ public class MainActivity extends Activity implements
 				double latitude = ghost.getLatitude();
 				double longitude = ghost.getLongitude();
 				// Add the ghost to the map
-				Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ghost);
-				Bitmap scaled = Bitmap.createScaledBitmap(bm, bm.getWidth()/2,bm.getHeight()/2, false);
+				Bitmap bm = BitmapFactory.decodeResource(getResources(),
+						R.drawable.ghost);
+				Bitmap scaled = Bitmap.createScaledBitmap(bm,
+						bm.getWidth() / 2, bm.getHeight() / 2, false);
 				map.addMarker(new MarkerOptions()
-	                .icon(BitmapDescriptorFactory.fromBitmap(scaled))
-	                .anchor(0.5f, 0.5f) 
-	                .position(new LatLng(latitude, longitude)));
+						.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+						.anchor(0.5f, 0.5f)
+						.position(new LatLng(latitude, longitude)));
 			}
 		} else {
 			// If adding the geofences failed

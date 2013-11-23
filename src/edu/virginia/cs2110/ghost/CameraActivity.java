@@ -54,6 +54,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	@Override
 	protected void onPause() {
 		super.onPause();
+		// when the app is paused, it stops updating to conserve battery
 		mSensorManager.unregisterListener(this);
 	}
 
