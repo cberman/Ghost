@@ -80,4 +80,17 @@ public class Item {
 	public int getTransitionType() {
 		return transitionType;
 	}
+	
+				/**
+			 * Creates a Location Services Geofence object from a Ghost.
+			 * 
+			 * @return A Geofence object
+			 */
+			public Geofence toGeofence() {
+				// Build a new Geofence object
+				return new Geofence.Builder().setRequestId(getId())
+						.setTransitionTypes(transitionType)
+						.setCircularRegion(getLatitude(), getLongitude(), getRadius())
+						.setExpirationDuration(expirationDuration).build();
+			}
 }
