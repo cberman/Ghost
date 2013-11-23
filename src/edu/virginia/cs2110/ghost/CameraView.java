@@ -23,7 +23,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		mCamera = getCameraFacingBack();
 		if (mCamera == null)
 			mCamera = getCameraInstance();
-		
+
 		// Set the orientation of the camera to portrait
 		mCamera.setDisplayOrientation(90);
 
