@@ -20,15 +20,22 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	private SensorManager mSensorManager;
 	private float[] orientation;
 	private ImageView overlay;
-	
+
+	private double latitude, longitude;
+	private double[] ghostLats, ghostLongs;
+
 	// Angle between north and ghost, in degrees
-	private final float ghostAngle = 300;	// Test value
+	private final float ghostAngle = 300; // Test value
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		orientation = new float[3];
+
+		Bundle extras = getIntent().getExtras();
+		latitude = extras.getDouble("latitude");
+		longitude = extras.getDouble("longitude");
 
 		setContentView(R.layout.activity_camera);
 		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
@@ -82,25 +89,42 @@ public class CameraActivity extends Activity implements SensorEventListener {
 				matrix.postScale(.75f, .75f, ghostWidth / 2, ghostHeight / 2);
 				matrix.postTranslate(
 						(((ghostAngle - orientation[0] + 180) % 360f) - 180)
-								* ghostWidth / 30, (((-90
-								- orientation[1] + 180) % 360f) - 180)
+								* ghostWidth / 30,
+						(((-90 - orientation[1] + 180) % 360f) - 180)
 								* ghostHeight / 40);
 				overlay.setImageMatrix(matrix);
 			}
 		}
 	}
-	
+
 	/**
 	 * When the back button is pressed, return to map
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			Intent i = new Intent(this, MainActivity.class);
 			startActivity(i);
-	        return true;
-	    }
+			return true;
+		}
 
-	    return super.onKeyDown(keyCode, event);
+		return super.onKeyDown(keyCode, event);
+	}
+
+	/**
+	 * Get angle between two locations, from
+	 * http://www.movable-type.co.uk/scripts/latlong.html
+	 * 
+	 */
+	private float ghostAngle(int ghost) {
+		double ghostLat = ghostLats[ghost];
+		double ghostLong = ghostLongs[ghost];
+		double dLat = Math.toRadians(ghostLat - latitude);
+		double dLon = Math.toRadians(ghostLong - longitude);
+		double y = Math.sin(dLon) * Math.cos(ghostLat);
+		double x = Math.cos(latitude) * Math.sin(ghostLat) - Math.sin(latitude)
+				* Math.cos(ghostLat) * Math.cos(dLon);
+		double bearing = Math.toDegrees(Math.atan2(y, x));
+		return (float) bearing;
 	}
 }

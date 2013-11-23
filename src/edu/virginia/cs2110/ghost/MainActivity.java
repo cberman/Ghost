@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements
 		OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
-	private Location mCurrentLocation;
+	Location mCurrentLocation;
 	// Define an object that holds accuracy and frequency parameters
 	LocationRequest mLocationRequest;
 	private boolean mUpdatesRequested;
@@ -111,6 +111,21 @@ public class MainActivity extends Activity implements
 		switch (item.getItemId()) {
 		case R.id.action_camera:
 			Intent i = new Intent(this, CameraActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putDouble("latitude", mCurrentLocation.getLatitude());
+			bundle.putDouble("longitude", mCurrentLocation.getLongitude());
+			double[] ghostLats = new double[mGhosts.getIds().size()];
+			double[] ghostLongs = new double[mGhosts.getIds().size()];
+			int index = 0;
+			for(String id : mGhosts.getIds()) {
+				Ghost g = mGhosts.getGhost(id);
+				ghostLats[index] = g.getLatitude();
+				ghostLongs[index] = g.getLongitude();
+				index++;
+			}
+			bundle.putDoubleArray("ghostLats", ghostLats);
+			bundle.putDoubleArray("ghostLongs", ghostLongs);
+			i.putExtras(bundle);
 			startActivity(i);
 			return true;
 		case R.id.action_settings:
