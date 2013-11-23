@@ -38,9 +38,9 @@ import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
 public class MainActivity extends Activity implements
-		GooglePlayServicesClient.ConnectionCallbacks,
-		OnConnectionFailedListener, LocationListener,
-		OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
+GooglePlayServicesClient.ConnectionCallbacks,
+OnConnectionFailedListener, LocationListener,
+OnAddGeofencesResultListener, OnRemoveGeofencesResultListener {
 	private LocationClient mLocationClient;
 	// Global variable to hold the current location
 	Location mCurrentLocation;
@@ -120,7 +120,7 @@ public class MainActivity extends Activity implements
 			double[] ghostLats = new double[mGhosts.getIds().size()];
 			double[] ghostLongs = new double[mGhosts.getIds().size()];
 			int index = 0;
-			for(String id : mGhosts.getIds()) {
+			for (String id : mGhosts.getIds()) {
 				Ghost g = mGhosts.getGhost(id);
 				ghostLats[index] = g.getLatitude();
 				ghostLongs[index] = g.getLongitude();
@@ -362,6 +362,11 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onLocationChanged(Location location) {
 		mCurrentLocation = location;
+		// Report to the UI that the location was updated
+		String msg = "Updated Location: "
+				+ Double.toString(mCurrentLocation.getLatitude()) + ","
+				+ Double.toString(mCurrentLocation.getLongitude());
+		Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 	}
 
 	private void createGhost() {
@@ -396,7 +401,8 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGeofences.size()+ 100* (1 + (int)(Math.random() * ((3 - 1) + 1)));
+		int id = mGeofences.size() + 100
+				* (1 + (int) (Math.random() * ((3 - 1) + 1)));
 		while (mItems.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
@@ -404,11 +410,13 @@ public class MainActivity extends Activity implements
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		double radius = (random.nextGaussian() * 10 + 100)/Constants.METERS_PER_DEGREE;
+		double radius = (random.nextGaussian() * 10 + 100)
+				/ Constants.METERS_PER_DEGREE;
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
-		Log.d("itemGeneration", "id: "+id+"; lat: "+latitude+"; long: "+longitude);
+		Log.d("itemGeneration", "id: " + id + "; lat: " + latitude + "; long: "
+				+ longitude);
 		Item item = new Item(Integer.toString(id), latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
@@ -534,18 +542,51 @@ public class MainActivity extends Activity implements
 			 * extended data.
 			 */
 			for (String id : geofenceRequestIds) {
-				Ghost ghost = mGhosts.getGhost(id);
-				double latitude = ghost.getLatitude();
-				double longitude = ghost.getLongitude();
-				// Add the ghost to the map
-				Bitmap bm = BitmapFactory.decodeResource(getResources(),
-						R.drawable.ghost);
-				Bitmap scaled = Bitmap.createScaledBitmap(bm,
-						bm.getWidth() / 2, bm.getHeight() / 2, false);
-				map.addMarker(new MarkerOptions()
-						.icon(BitmapDescriptorFactory.fromBitmap(scaled))
-						.anchor(0.5f, 0.5f)
-						.position(new LatLng(latitude, longitude)));
+				if (Integer.parseInt("id") <= 100) {
+					Ghost ghost = mGhosts.getGhost(id);
+					double latitude = ghost.getLatitude();
+					double longitude = ghost.getLongitude();
+					// Add the ghost to the map
+					Bitmap bm = BitmapFactory.decodeResource(getResources(),
+							R.drawable.ghost);
+					Bitmap scaled = Bitmap.createScaledBitmap(bm,
+							bm.getWidth() / 2, bm.getHeight() / 2, false);
+					map.addMarker(new MarkerOptions()
+					.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+					.anchor(0.5f, 0.5f)
+					.position(new LatLng(latitude, longitude)));
+				}
+				if (Integer.parseInt("id") > 100) {
+					Item item = mItems.getItem(id);
+					double latitude = item.getLatitude();
+					double longitude = item.getLongitude();
+					// Add the ghost to the map
+					Bitmap bm;
+
+					if (Integer.parseInt("id") <= 200) {
+						bm = BitmapFactory.decodeResource(getResources(),
+								R.drawable.bomb);
+					}
+
+					if (Integer.parseInt("id") > 200
+							&& Integer.parseInt("id") <= 300) {
+						bm = BitmapFactory.decodeResource(getResources(),
+								R.drawable.dogbone);
+					}
+
+					if (Integer.parseInt("id") > 300) {
+						bm = BitmapFactory.decodeResource(getResources(),
+								R.drawable.dollarsign);
+					}
+
+					Bitmap scaled = Bitmap.createScaledBitmap(bm,
+							bm.getWidth() / 2, bm.getHeight() / 2, false);
+					map.addMarker(new MarkerOptions()
+					.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+					.anchor(0.5f, 0.5f)
+					.position(new LatLng(latitude, longitude)));
+				}
+
 			}
 		} else {
 			// If adding the geofences failed
