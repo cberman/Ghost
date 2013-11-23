@@ -93,6 +93,7 @@ public class MainActivity extends Activity implements
 		mEditor.commit();
 		// Instantiate a new geofence storage area
 		mGhosts = new GhostStore(this);
+		mItems = new ItemStore(this);
 		// Instantiate the current List of geofences
 		mGeofences = new ArrayList<Geofence>();
 		// Start with the request flag set to false
