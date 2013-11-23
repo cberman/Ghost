@@ -53,6 +53,8 @@ public class MainActivity extends Activity implements
 	private List<Geofence> mGeofences;
 	// Persistent storage for ghosts
 	private GhostStore mGhosts;
+	// Persistent storage for items
+	private ItemStore mItems;
 	// Stores the PendingIntent used to request geofence monitoring
 	private PendingIntent mTransitionPendingIntent;
 	// Flag that indicates if a request is underway.
@@ -91,6 +93,7 @@ public class MainActivity extends Activity implements
 		mEditor.commit();
 		// Instantiate a new geofence storage area
 		mGhosts = new GhostStore(this);
+		mItems = new ItemStore(this);
 		// Instantiate the current List of geofences
 		mGeofences = new ArrayList<Geofence>();
 		// Start with the request flag set to false
@@ -392,6 +395,32 @@ public class MainActivity extends Activity implements
 		// Store this flat version
 		mGhosts.saveGhost(Integer.toString(id), ghost);
 		mGeofences.add(ghost.toGeofence());
+	}
+
+	private void createItem() {
+		/*
+		 * Find an id that isn't in use
+		 */
+		int id = mGeofences.size()+1;
+		while (mItems.getIds().contains(Integer.toString(id)))
+			id++;
+		/*
+		 * Generate a random position
+		 */
+		double latitude = mCurrentLocation.getLatitude();
+		double longitude = mCurrentLocation.getLongitude();
+		double radius = (random.nextGaussian() * 10 + 100)/Constants.METERS_PER_DEGREE;
+		double theta = random.nextDouble() * 2 * Math.PI;
+		latitude += radius * Math.cos(theta);
+		longitude += radius * Math.sin(theta) * Math.cos(latitude);
+		Log.d("itemGeneration", "id: "+id+"; lat: "+latitude+"; long: "+longitude);
+		Item item = new Item(Integer.toString(id), latitude, longitude,
+				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
+				// This geofence records only entry transitions
+				Geofence.GEOFENCE_TRANSITION_ENTER);
+		// Store this flat version
+		mItems.saveItem(Integer.toString(id), item);
+		mGeofences.add(item.toGeofence());
 	}
 
 	/**
