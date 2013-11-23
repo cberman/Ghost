@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/first_ll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingTop="50dip" >
 
         <fragment
             android:id="@+id/map"
@@ -17,7 +18,7 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/second_ll"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -63,6 +64,6 @@
             android:layout_height="55dp"
             android:layout_gravity="left"
             android:src="@drawable/ghost" />
-    </LinearLayout>
+    </FrameLayout>
 
-</LinearLayout>
+</FrameLayout>
