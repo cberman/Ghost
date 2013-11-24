@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingTop="50dip" >
+        android:paddingTop="85dip" >
 
         <fragment
             android:id="@+id/map"
@@ -31,22 +31,48 @@
             android:layout_gravity="center_horizontal|top"
             android:layout_marginTop="2dip"
             android:background="#AA000000"
-            android:padding="12dip"
-            android:text="@string/score_bar"
+            android:padding="15dip"
+            android:text=""
+            android:textColor="@color/white" />
+         <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="50dip"
+            android:background="#AA000000"
+            android:padding="7dip"
+            android:text="bomb"
+            
+            
+            android:textColor="@color/white" />
+          
+          <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="50dip"
+            android:padding="7dip"
+            android:text="b"
+            
+            
+            android:textColor="@color/white" />
+           
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="1dip"
+            android:layout_marginTop="10dip"
+            android:padding="45dip"
+            android:text=""
             android:textColor="@color/white" />
 
         <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="25dp"
-            android:layout_height="44dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/dollarsign" 
-            android:clickable="true"
-            android:onClick="buyBomb"/>
-
-        <ImageView
             android:id="@+id/imageView4"
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="55dp"
             android:layout_gravity="left"
             android:layout_marginLeft="100dp"
@@ -54,13 +80,23 @@
 
         <ImageView
             android:id="@+id/imageButton1"
-            android:layout_width="25dp"
-            android:layout_height="44dp"
+            android:layout_width="49dp"
+            android:layout_height="50dp"
             android:layout_gravity="right"
             android:layout_marginRight="100dp"
             android:clickable="true"
             android:onClick="useBomb"
             android:src="@drawable/bomb" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"
+            android:onClick="buyBomb"
+            android:src="@drawable/dollarsign" />
+
     </FrameLayout>
 
 </FrameLayout>
