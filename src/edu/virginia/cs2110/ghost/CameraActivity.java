@@ -32,8 +32,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
 		orientation = new float[3];
 
 		Bundle extras = getIntent().getExtras();
-		latitude = extras.getDouble("latitude");
-		longitude = extras.getDouble("longitude");
+		latitude = Math.toRadians(extras.getDouble("latitude"));
+		longitude = Math.toRadians(extras.getDouble("longitude"));
 		ghostLats = extras.getDoubleArray("ghostLats");
 		ghostLongs = extras.getDoubleArray("ghostLongs");
 
@@ -120,10 +120,10 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	 * 
 	 */
 	private float ghostAngle(int ghost) {
-		double ghostLat = ghostLats[ghost];
-		double ghostLong = ghostLongs[ghost];
-		double dLat = Math.toRadians(ghostLat - latitude);
-		double dLon = Math.toRadians(ghostLong - longitude);
+		double ghostLat = Math.toRadians(ghostLats[ghost]);
+		double ghostLong = Math.toRadians(ghostLongs[ghost]);
+		double dLat = ghostLat - latitude;
+		double dLon = ghostLong - longitude;
 		double y = Math.sin(dLon) * Math.cos(ghostLat);
 		double x = Math.cos(latitude) * Math.sin(ghostLat) - Math.sin(latitude)
 				* Math.cos(ghostLat) * Math.cos(dLon);
