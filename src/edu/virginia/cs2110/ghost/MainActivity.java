@@ -1,7 +1,6 @@
 // http://developer.android.com/google/play-services/setup.html
 package edu.virginia.cs2110.ghost;
 
-//testing changes 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +18,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -477,16 +477,23 @@ public class MainActivity extends Activity implements
 				bm.getHeight() / 2, false);
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		Marker bomb = map.addMarker(new MarkerOptions()
+		final Marker bomb = map.addMarker(new MarkerOptions()
 				.icon(BitmapDescriptorFactory.fromBitmap(scaled))
 				.anchor(0.5f, 0.5f).position(new LatLng(latitude, longitude)));
+		new Handler().postDelayed(new Runnable() {
+
+			public void run() {
+				bomb.remove();
+			}
+		}, 500);
 		List<String> killed = new ArrayList<String>();
 		for (String id : mGhosts.getIds()) {
 			Ghost g = mGhosts.getGhost(id);
 			double ghostLat = g.getLatitude(), ghostLong = g.getLongitude();
-			Log.d("location",latitude+", "+longitude);
-			Log.d("ghostLoc",ghostLat+", "+ghostLong);
-			Log.d("distance",haversine(latitude, longitude, ghostLat, ghostLong)+"");
+			Log.d("location", latitude + ", " + longitude);
+			Log.d("ghostLoc", ghostLat + ", " + ghostLong);
+			Log.d("distance",
+					haversine(latitude, longitude, ghostLat, ghostLong) + "");
 			if (haversine(latitude, longitude, ghostLat, ghostLong) <= Constants.BOMB_RADIUS) {
 				killed.add(id);
 				ghostsKilled++;
@@ -583,7 +590,7 @@ public class MainActivity extends Activity implements
 	 * 
 	 */
 	public boolean removeGeofences(List<String> geofenceIds) {
-		if(geofenceIds.isEmpty())
+		if (geofenceIds.isEmpty())
 			return true;
 		/*
 		 * Test for Google Play services after setting the request type. If
