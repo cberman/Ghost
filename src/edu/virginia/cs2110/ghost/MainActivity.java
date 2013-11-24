@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,7 +69,7 @@ public class MainActivity extends Activity implements
 	private GoogleMap map;
 	private Map<String, Marker> mapMarkers;
 
-	private int bombs, money;
+	private int bombs = 1, money;
 	private int ghostsKilled;
 	public int difficulty;
 
@@ -437,7 +438,7 @@ public class MainActivity extends Activity implements
 		mItems.saveItem(Integer.toString(id), item);
 		mGeofences.add(item.toGeofence());
 	}
-	
+
 	private void createMoney(double lat, double lon) {
 
 		int id = mItems.getIds().size() + 200;
@@ -469,12 +470,23 @@ public class MainActivity extends Activity implements
 					.show();
 			return;
 		}
+		bombs--;
+		Bitmap bm = BitmapFactory.decodeResource(getResources(),
+				R.drawable.boom);
+		Bitmap scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
+				bm.getHeight() / 2, false);
+		double latitude = mCurrentLocation.getLatitude();
+		double longitude = mCurrentLocation.getLongitude();
+		Marker bomb = map.addMarker(new MarkerOptions()
+				.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+				.anchor(0.5f, 0.5f).position(new LatLng(latitude, longitude)));
 		List<String> killed = new ArrayList<String>();
 		for (String id : mGhosts.getIds()) {
 			Ghost g = mGhosts.getGhost(id);
 			double ghostLat = g.getLatitude(), ghostLong = g.getLongitude();
-			double latitude = mCurrentLocation.getLatitude();
-			double longitude = mCurrentLocation.getLongitude();
+			Log.d("location",latitude+", "+longitude);
+			Log.d("ghostLoc",ghostLat+", "+ghostLong);
+			Log.d("distance",haversine(latitude, longitude, ghostLat, ghostLong)+"");
 			if (haversine(latitude, longitude, ghostLat, ghostLong) <= Constants.BOMB_RADIUS) {
 				killed.add(id);
 				ghostsKilled++;
@@ -491,6 +503,10 @@ public class MainActivity extends Activity implements
 	 * 
 	 */
 	private double haversine(double lat1, double lon1, double lat2, double lon2) {
+		lat1 = Math.toRadians(lat1);
+		lon1 = Math.toRadians(lon1);
+		lat2 = Math.toRadians(lat2);
+		lon2 = Math.toRadians(lon2);
 		double dlon = lon2 - lon1;
 		double dlat = lat2 - lat1;
 		double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1)
@@ -567,6 +583,8 @@ public class MainActivity extends Activity implements
 	 * 
 	 */
 	public boolean removeGeofences(List<String> geofenceIds) {
+		if(geofenceIds.isEmpty())
+			return true;
 		/*
 		 * Test for Google Play services after setting the request type. If
 		 * Google Play services isn't present, the request can be restarted.
@@ -626,10 +644,6 @@ public class MainActivity extends Activity implements
 							R.drawable.ghost);
 					scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
 							bm.getHeight() / 2, false);
-					map.addMarker(new MarkerOptions()
-							.icon(BitmapDescriptorFactory.fromBitmap(scaled))
-							.anchor(0.5f, 0.5f)
-							.position(new LatLng(latitude, longitude)));
 				}
 				if (Integer.parseInt(id) > 100) {
 					Item item = mItems.getItem(id);
