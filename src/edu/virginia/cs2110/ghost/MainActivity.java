@@ -18,13 +18,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -69,14 +69,19 @@ public class MainActivity extends Activity implements
 	private GoogleMap map;
 	private Map<String, Marker> mapMarkers;
 
-	private int bombs = 1, money;
-	private int ghostsKilled;
+	private int bombs = 1, money = 6, ghostsKilled;
 	public int difficulty;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		((TextView) findViewById(R.id.textViewGhost)).setText(Integer
+				.toString(ghostsKilled));
+		((TextView) findViewById(R.id.textViewDollar)).setText(Integer
+				.toString(money));
+		((TextView) findViewById(R.id.textViewBomb)).setText(Integer
+				.toString(bombs));
 
 		// Open the shared preferences
 		mPrefs = getSharedPreferences(Constants.SHARED_PREFERENCES,
@@ -392,26 +397,26 @@ public class MainActivity extends Activity implements
 		 * Find an id that isn't in use
 		 */
 		int id = mGhosts.getIds().size();
-		while (mGhosts.getIds().contains("G"+id))
+		while (mGhosts.getIds().contains("G" + id))
 			id++;
 		/*
 		 * Generate a random position
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		double radius = (random.nextGaussian() * 10 + 100)
+		double radius = (random.nextGaussian() * 10 + 60)
 				/ Constants.METERS_PER_DEGREE;
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
 		Log.d("ghostGeneration", "id: G" + id + "; lat: " + latitude
 				+ "; long: " + longitude);
-		Ghost ghost = new Ghost("G"+id, latitude, longitude,
+		Ghost ghost = new Ghost("G" + id, latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER, false);
 		// Store this flat version
-		mGhosts.saveGhost("G"+id, ghost);
+		mGhosts.saveGhost("G" + id, ghost);
 		mGeofences.add(ghost.toGeofence());
 	}
 
@@ -420,7 +425,7 @@ public class MainActivity extends Activity implements
 		 * Find an id that isn't in use
 		 */
 		int id = mItems.getIds().size();
-		while (mItems.getIds().contains("B"+id))
+		while (mItems.getIds().contains("B" + id))
 			id++;
 		/*
 		 * Generate a random position
@@ -432,29 +437,29 @@ public class MainActivity extends Activity implements
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
-		Log.d("itemGeneration", "id: B" + id + "; lat: " + latitude + "; long: "
-				+ longitude);
-		Item item = new Item("B"+id, latitude, longitude,
+		Log.d("itemGeneration", "id: B" + id + "; lat: " + latitude
+				+ "; long: " + longitude);
+		Item item = new Item("B" + id, latitude, longitude,
 				Constants.BOMB_PICKUP, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 		// Store this flat version
-		mItems.saveItem("B"+id, item);
+		mItems.saveItem("B" + id, item);
 		mGeofences.add(item.toGeofence());
 	}
 
 	private void createMoney(double lat, double lon) {
 
 		int id = mItems.getIds().size();
-		while (mItems.getIds().contains("M"+id))
+		while (mItems.getIds().contains("M" + id))
 			id++;
 
-		Item item = new Item("M"+id, lat, lon,
-				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
+		Item item = new Item("M" + id, lat, lon, Constants.GHOST_RADIUS,
+				Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 		// Store this flat version
-		mItems.saveItem("M"+id, item);
+		mItems.saveItem("M" + id, item);
 		mGeofences.add(item.toGeofence());
 	}
 
@@ -464,7 +469,11 @@ public class MainActivity extends Activity implements
 					Toast.LENGTH_SHORT).show();
 		} else {
 			money -= 5;
+			((TextView) findViewById(R.id.textViewDollar)).setText(Integer
+					.toString(money));
 			bombs++;
+			((TextView) findViewById(R.id.textViewBomb)).setText(Integer
+					.toString(bombs));
 		}
 	}
 
@@ -475,6 +484,8 @@ public class MainActivity extends Activity implements
 			return;
 		}
 		bombs--;
+		((TextView) findViewById(R.id.textViewBomb)).setText(Integer
+				.toString(bombs));
 		Bitmap bm = BitmapFactory.decodeResource(getResources(),
 				R.drawable.boom);
 		Bitmap scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
@@ -504,6 +515,8 @@ public class MainActivity extends Activity implements
 				createMoney(ghostLat, ghostLong);
 			}
 		}
+		((TextView) findViewById(R.id.textViewGhost)).setText(Integer
+				.toString(ghostsKilled));
 		// Add the money
 		addGeofences();
 		removeGeofences(killed);
