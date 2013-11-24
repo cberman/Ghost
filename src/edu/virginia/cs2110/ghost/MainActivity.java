@@ -407,8 +407,7 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mItems.getIds().size() + 100
-				* (1 + (int) (Math.random() * ((2 - 1) + 1)));
+		int id = mItems.getIds().size() + 100;
 		while (mItems.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
