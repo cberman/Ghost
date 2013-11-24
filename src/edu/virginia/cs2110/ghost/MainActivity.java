@@ -68,8 +68,9 @@ public class MainActivity extends Activity implements
 	private GoogleMap map;
 	private Map<String, Marker> mapMarkers;
 
-	int bombs, money;
+	private int bombs, money;
 	private int ghostsKilled;
+	public int difficulty;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +145,12 @@ public class MainActivity extends Activity implements
 						Toast.LENGTH_LONG).show();
 			return true;
 		case R.id.action_settings:
+			return true;
+		case R.id.difficulty_easy:
+			difficulty = Constants.DIFFICULTY_EASY;
+			return true;
+		case R.id.difficulty_hard:
+			difficulty = Constants.DIFFICULTY_HARD;
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
