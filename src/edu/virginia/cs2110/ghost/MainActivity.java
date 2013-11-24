@@ -290,7 +290,9 @@ public class MainActivity extends Activity implements
 	 */
 	@Override
 	public void onConnected(Bundle dataBundle) {
+		do {
 		mCurrentLocation = mLocationClient.getLastLocation();
+		} while(mCurrentLocation == null);
 
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 				.getMap();
