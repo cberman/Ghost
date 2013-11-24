@@ -12,6 +12,9 @@
                 android:id="@+id/difficulty_easy"
                 android:title="@string/difficulty_easy"/>
             <item
+                android:id="@+id/difficulty_medium"
+                android:title="@string/difficulty_medium"/>
+            <item
                 android:id="@+id/difficulty_hard"
                 android:title="@string/difficulty_hard"/>
         </menu>
