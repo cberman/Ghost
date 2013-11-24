@@ -391,8 +391,8 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGhosts.getIds().size() + 1;
-		while (mGhosts.getIds().contains(Integer.toString(id)))
+		int id = mGhosts.getIds().size();
+		while (mGhosts.getIds().contains("G"+id))
 			id++;
 		/*
 		 * Generate a random position
@@ -404,14 +404,14 @@ public class MainActivity extends Activity implements
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
-		Log.d("ghostGeneration", "id: " + id + "; lat: " + latitude
+		Log.d("ghostGeneration", "id: G" + id + "; lat: " + latitude
 				+ "; long: " + longitude);
-		Ghost ghost = new Ghost(Integer.toString(id), latitude, longitude,
+		Ghost ghost = new Ghost("G"+id, latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER, false);
 		// Store this flat version
-		mGhosts.saveGhost(Integer.toString(id), ghost);
+		mGhosts.saveGhost("G"+id, ghost);
 		mGeofences.add(ghost.toGeofence());
 	}
 
@@ -419,8 +419,8 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mItems.getIds().size() + 100;
-		while (mItems.getIds().contains(Integer.toString(id)))
+		int id = mItems.getIds().size();
+		while (mItems.getIds().contains("B"+id))
 			id++;
 		/*
 		 * Generate a random position
@@ -432,29 +432,29 @@ public class MainActivity extends Activity implements
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
 		longitude += radius * Math.sin(theta) * Math.cos(latitude);
-		Log.d("itemGeneration", "id: " + id + "; lat: " + latitude + "; long: "
+		Log.d("itemGeneration", "id: B" + id + "; lat: " + latitude + "; long: "
 				+ longitude);
-		Item item = new Item(Integer.toString(id), latitude, longitude,
+		Item item = new Item("B"+id, latitude, longitude,
 				Constants.BOMB_PICKUP, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 		// Store this flat version
-		mItems.saveItem(Integer.toString(id), item);
+		mItems.saveItem("B"+id, item);
 		mGeofences.add(item.toGeofence());
 	}
 
 	private void createMoney(double lat, double lon) {
 
-		int id = mItems.getIds().size() + 200;
-		while (mItems.getIds().contains(Integer.toString(id)))
+		int id = mItems.getIds().size();
+		while (mItems.getIds().contains("M"+id))
 			id++;
 
-		Item item = new Item(Integer.toString(id), lat, lon,
+		Item item = new Item("M"+id, lat, lon,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 		// Store this flat version
-		mItems.saveItem(Integer.toString(id), item);
+		mItems.saveItem("M"+id, item);
 		mGeofences.add(item.toGeofence());
 	}
 
@@ -649,7 +649,7 @@ public class MainActivity extends Activity implements
 			for (String id : geofenceRequestIds) {
 				double latitude = 0, longitude = 0;
 				Bitmap scaled = null;
-				if (Integer.parseInt(id) < 100) {
+				if (id.charAt(0) == 'G') {
 					Ghost ghost = mGhosts.getGhost(id);
 					latitude = ghost.getLatitude();
 					longitude = ghost.getLongitude();
@@ -665,7 +665,7 @@ public class MainActivity extends Activity implements
 					// Add the ghost to the map
 					Bitmap bm = null;
 
-					if (Integer.parseInt(id) < 200) {
+					if (id.charAt(0) == 'B') {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.bomb);
 					} else {
