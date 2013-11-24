@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements
 	private Map<String, Marker> mapMarkers;
 
 	int bombs, money;
+	private int ghostsKilled;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -442,11 +443,23 @@ public class MainActivity extends Activity implements
 	}
 
 	public void useBomb(View v) {
-		if( bombs == 0) {
-			Toast.makeText(this, "You don't have any bombs", Toast.LENGTH_SHORT).show();
+		if (bombs == 0) {
+			Toast.makeText(this, "You don't have any bombs", Toast.LENGTH_SHORT)
+					.show();
 			return;
 		}
-		Toast.makeText(this, "Bomb!", Toast.LENGTH_SHORT).show();
+		List<String> killed = new ArrayList<String>();
+		for (String id : mGhosts.getIds()) {
+			Ghost g = mGhosts.getGhost(id);
+			double ghostLat = g.getLatitude(), ghostLong = g.getLongitude();
+			double latitude = mCurrentLocation.getLatitude();
+			double longitude = mCurrentLocation.getLongitude();
+			if (haversine(latitude, longitude, ghostLat, ghostLong) <= Constants.BOMB_RADIUS) {
+				killed.add(id);
+				ghostsKilled++;
+			}
+		}
+		removeGeofences(killed);
 	}
 
 	/**
