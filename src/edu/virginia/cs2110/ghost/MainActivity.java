@@ -150,6 +150,9 @@ public class MainActivity extends Activity implements
 		case R.id.difficulty_easy:
 			difficulty = Constants.DIFFICULTY_EASY;
 			return true;
+		case R.id.difficulty_medium:
+			difficulty = Constants.DIFFICULTY_MEDIUM;
+			return true;
 		case R.id.difficulty_hard:
 			difficulty = Constants.DIFFICULTY_HARD;
 			return true;
