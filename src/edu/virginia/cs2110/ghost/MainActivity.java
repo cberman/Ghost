@@ -3,7 +3,9 @@ package edu.virginia.cs2110.ghost;
 
 //testing changes 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import android.app.Activity;
@@ -64,6 +66,7 @@ public class MainActivity extends Activity implements
 	private Random random;
 
 	private GoogleMap map;
+	private Map<String, Marker> mapMarkers;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +100,7 @@ public class MainActivity extends Activity implements
 		mItems = new ItemStore(this);
 		// Instantiate the current List of geofences
 		mGeofences = new ArrayList<Geofence>();
+		mapMarkers = new HashMap<String, Marker>();
 		// Start with the request flag set to false
 		mInProgress = false;
 		random = new Random(System.currentTimeMillis());
@@ -291,8 +295,8 @@ public class MainActivity extends Activity implements
 	@Override
 	public void onConnected(Bundle dataBundle) {
 		do {
-		mCurrentLocation = mLocationClient.getLastLocation();
-		} while(mCurrentLocation == null);
+			mCurrentLocation = mLocationClient.getLastLocation();
+		} while (mCurrentLocation == null);
 
 		map = ((MapFragment) getFragmentManager().findFragmentById(R.id.map))
 				.getMap();
@@ -424,9 +428,9 @@ public class MainActivity extends Activity implements
 		mItems.saveItem(Integer.toString(id), item);
 		mGeofences.add(item.toGeofence());
 	}
-	
+
 	public void useBomb(View v) {
-		Toast.makeText(this,  "Bomb!", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "Bomb!", Toast.LENGTH_SHORT).show();
 	}
 
 	/**
@@ -545,15 +549,17 @@ public class MainActivity extends Activity implements
 			 * extended data.
 			 */
 			for (String id : geofenceRequestIds) {
+				double latitude = 0, longitude = 0;
+				Bitmap scaled = null;
 				if (Integer.parseInt(id) <= 100) {
 					Ghost ghost = mGhosts.getGhost(id);
-					double latitude = ghost.getLatitude();
-					double longitude = ghost.getLongitude();
+					latitude = ghost.getLatitude();
+					longitude = ghost.getLongitude();
 					// Add the ghost to the map
 					Bitmap bm = BitmapFactory.decodeResource(getResources(),
 							R.drawable.ghost);
-					Bitmap scaled = Bitmap.createScaledBitmap(bm,
-							bm.getWidth() / 2, bm.getHeight() / 2, false);
+					scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
+							bm.getHeight() / 2, false);
 					map.addMarker(new MarkerOptions()
 							.icon(BitmapDescriptorFactory.fromBitmap(scaled))
 							.anchor(0.5f, 0.5f)
@@ -561,29 +567,27 @@ public class MainActivity extends Activity implements
 				}
 				if (Integer.parseInt(id) > 100) {
 					Item item = mItems.getItem(id);
-					double latitude = item.getLatitude();
-					double longitude = item.getLongitude();
+					latitude = item.getLatitude();
+					longitude = item.getLongitude();
 					// Add the ghost to the map
 					Bitmap bm = null;
 
 					if (Integer.parseInt(id) <= 200) {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.bomb);
-					}
-
-
-					if (Integer.parseInt(id) > 200) {
+					} else {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.dollarsign);
 					}
 
-					Bitmap scaled = Bitmap.createScaledBitmap(bm,
-							bm.getWidth() / 2, bm.getHeight() / 2, false);
-					map.addMarker(new MarkerOptions()
-							.icon(BitmapDescriptorFactory.fromBitmap(scaled))
-							.anchor(0.5f, 0.5f)
-							.position(new LatLng(latitude, longitude)));
+					scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
+							bm.getHeight() / 2, false);
 				}
+				Marker marker = map.addMarker(new MarkerOptions()
+						.icon(BitmapDescriptorFactory.fromBitmap(scaled))
+						.anchor(0.5f, 0.5f)
+						.position(new LatLng(latitude, longitude)));
+				mapMarkers.put(id, marker);
 
 			}
 		} else {
@@ -652,10 +656,8 @@ public class MainActivity extends Activity implements
 				for (Geofence g : mGeofences)
 					if (id != null && id.equals(g.getRequestId()))
 						mGeofences.remove(g);
-				Ghost ghost = mGhosts.getGhost(id);
-				double latitude = ghost.getLatitude();
-				double longitude = ghost.getLongitude();
 				// Remove the ghost from the map
+				mapMarkers.get(id).remove();
 				mGhosts.clearGhost(id);
 			}
 		} else {
