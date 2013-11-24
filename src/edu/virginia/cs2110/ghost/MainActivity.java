@@ -325,7 +325,7 @@ public class MainActivity extends Activity implements
 		if (mUpdatesRequested) {
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 		}
-		
+
 		new EventGenerator().execute(this);
 	}
 
@@ -655,15 +655,14 @@ public class MainActivity extends Activity implements
 							R.drawable.ghost);
 					scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
 							bm.getHeight() / 2, false);
-				}
-				if (Integer.parseInt(id) > 100) {
+				} else {
 					Item item = mItems.getItem(id);
 					latitude = item.getLatitude();
 					longitude = item.getLongitude();
 					// Add the ghost to the map
 					Bitmap bm = null;
 
-					if (Integer.parseInt(id) <= 200) {
+					if (Integer.parseInt(id) < 200) {
 						bm = BitmapFactory.decodeResource(getResources(),
 								R.drawable.bomb);
 					} else {
