@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationClient;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 public class ReceiveTransitionsIntentService extends IntentService {
 	/**
@@ -61,6 +62,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
 				 * At this point, you can store the IDs for further use display
 				 * them, or display the details associated with them.
 				 */
+				//Toast.makeText(this, "You are near something", Toast.LENGTH_LONG).show();
 			} else {
 				// An invalid transition was reported
 				Log.e("ReceiveTransitionsIntentService",

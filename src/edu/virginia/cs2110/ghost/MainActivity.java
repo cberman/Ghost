@@ -61,15 +61,13 @@ public class MainActivity extends Activity implements
 	private ItemStore mItems;
 	// Stores the PendingIntent used to request geofence monitoring
 	private PendingIntent mTransitionPendingIntent;
-	// Flag that indicates if a request is underway.
-	private boolean mInProgress;
 	// Used to generate ghost locations
 	private Random random;
 
 	private GoogleMap map;
 	private Map<String, Marker> mapMarkers;
 
-	private int bombs = 1, money = 6, ghostsKilled;
+	private int bombs = 10, money = 6, ghostsKilled;
 	public int difficulty;
 
 	@Override
@@ -111,8 +109,6 @@ public class MainActivity extends Activity implements
 		// Instantiate the current List of geofences
 		mGeofences = new ArrayList<Geofence>();
 		mapMarkers = new HashMap<String, Marker>();
-		// Start with the request flag set to false
-		mInProgress = false;
 		random = new Random(System.currentTimeMillis());
 		difficulty = Constants.DIFFICULTY_EASY;
 	}
@@ -350,8 +346,6 @@ public class MainActivity extends Activity implements
 		 */
 		mLocationClient.removeLocationUpdates(this);
 		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
-		// Turn off the request flag
-		mInProgress = false;
 	}
 
 	/*
@@ -440,7 +434,7 @@ public class MainActivity extends Activity implements
 		Log.d("itemGeneration", "id: B" + id + "; lat: " + latitude
 				+ "; long: " + longitude);
 		Item item = new Item("B" + id, latitude, longitude,
-				Constants.BOMB_PICKUP, Constants.GHOST_EXPIRATION_TIME,
+				Constants.PICKUP_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 		// Store this flat version
@@ -454,7 +448,7 @@ public class MainActivity extends Activity implements
 		while (mItems.getIds().contains("M" + id))
 			id++;
 
-		Item item = new Item("M" + id, lat, lon, Constants.GHOST_RADIUS,
+		Item item = new Item("M" + id, lat, lon, Constants.PICKUP_RADIUS,
 				Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
@@ -558,16 +552,6 @@ public class MainActivity extends Activity implements
 		}
 		if (mGeofences.size() == 0)
 			return true;
-		// If a request is not already underway
-		if (mInProgress)
-			/*
-			 * A request is already underway. You can handle this situation by
-			 * disconnecting the client, re-setting the flag, and then re-trying
-			 * the request.
-			 */
-			return false;
-		// Indicate that a request is underway
-		mInProgress = true;
 		// Send a request to add the current geofences
 		// Get the PendingIntent for the request
 		mTransitionPendingIntent = getTransitionPendingIntent();
@@ -589,19 +573,7 @@ public class MainActivity extends Activity implements
 		if (!servicesConnected()) {
 			return false;
 		}
-		// If a request is not already underway
-		if (!mInProgress) {
-			// Indicate that a request is underway
-			mInProgress = true;
-			mLocationClient.removeGeofences(requestIntent, this);
-		} else {
-			/*
-			 * A request is already underway. You can handle this situation by
-			 * disconnecting the client, re-setting the flag, and then re-trying
-			 * the request.
-			 */
-			return false;
-		}
+		mLocationClient.removeGeofences(requestIntent, this);
 		return true;
 	}
 
@@ -610,6 +582,7 @@ public class MainActivity extends Activity implements
 	 * 
 	 */
 	public boolean removeGeofences(List<String> geofenceIds) {
+		Log.d("bombing", geofenceIds.toString());
 		if (geofenceIds.isEmpty())
 			return true;
 		/*
@@ -619,19 +592,7 @@ public class MainActivity extends Activity implements
 		if (!servicesConnected()) {
 			return false;
 		}
-		// If a request is not already underway
-		if (!mInProgress) {
-			// Indicate that a request is underway
-			mInProgress = true;
-			mLocationClient.removeGeofences(geofenceIds, this);
-		} else {
-			/*
-			 * A request is already underway. You can handle this situation by
-			 * disconnecting the client, re-setting the flag, and then re-trying
-			 * the request.
-			 */
-			return false;
-		}
+		mLocationClient.removeGeofences(geofenceIds, this);
 		return true;
 	}
 
@@ -704,9 +665,6 @@ public class MainActivity extends Activity implements
 			 */
 			Log.e("Geofence", "unable to add geofence");
 		}
-		// Turn off the in progress flag
-		mInProgress = false;
-
 	}
 
 	/**
@@ -736,8 +694,6 @@ public class MainActivity extends Activity implements
 			 */
 			Log.e("Geofence", "unable to remove geofences by intent");
 		}
-		// Indicate that a request is no longer in progress
-		mInProgress = false;
 	}
 
 	/**
@@ -760,7 +716,9 @@ public class MainActivity extends Activity implements
 			 */
 			for (String id : geofenceRequestIds) {
 				// Remove the ghost from the map
+				Log.d("bombing", "Removing ghost " + id);
 				mapMarkers.get(id).remove();
+				mapMarkers.remove(id);
 				mGhosts.clearGhost(id);
 			}
 		} else {
@@ -771,7 +729,5 @@ public class MainActivity extends Activity implements
 			 */
 			Log.e("Geofence", "unable to remove geofences by id");
 		}
-		// Indicate that a request is no longer in progress
-		mInProgress = false;
 	}
 }

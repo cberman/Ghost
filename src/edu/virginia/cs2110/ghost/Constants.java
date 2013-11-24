@@ -59,8 +59,9 @@ public final class Constants {
 	public static final float GHOST_RADIUS = 50; // in meters
 	public static final double METERS_PER_DEGREE = 111111;
 
-	public static final double BOMB_RADIUS = 50;
-	public static final float BOMB_PICKUP = 10;
+	public static final double BOMB_RADIUS = 500;
+	
+	public static final float PICKUP_RADIUS = 10;
 
 	public static final int DIFFICULTY_EASY = 0;
 	public static final int DIFFICULTY_MEDIUM = 1;
