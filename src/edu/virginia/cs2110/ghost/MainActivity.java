@@ -434,6 +434,23 @@ public class MainActivity extends Activity implements
 	}
 
 	/**
+	 * Uses the Haversine Formula expressed in terms of a two-argument inverse
+	 * tangent function to calculate the great circle distance between two
+	 * points on the Earth. From
+	 * http://andrew.hedges.name/experiments/haversine/
+	 * 
+	 */
+	private double haversine(double lat1, double lon1, double lat2, double lon2) {
+		double dlon = lon2 - lon1;
+		double dlat = lat2 - lat1;
+		double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1)
+				* Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+		double d = 6373000 * c; // Optimized for locations around 39 degrees
+		return d;
+	}
+
+	/**
 	 * Start a request for geofence monitoring by calling
 	 * LocationClient.connect().
 	 */
