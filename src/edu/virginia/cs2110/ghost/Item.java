@@ -49,10 +49,6 @@ public class Item {
 		this.longitude = longitude;
 		this.radius = radius;
 		this.expirationDuration = expiration;
-		if (transitionType <= 0
-				|| transitionType > (Geofence.GEOFENCE_TRANSITION_DWELL
-						| Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT))
-			throw new IllegalArgumentException();
 		this.transitionType = transition;
 	}
 

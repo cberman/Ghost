@@ -53,11 +53,6 @@ public class Ghost {
 		this.longitude = longitude;
 		this.radius = radius;
 		this.expirationDuration = expiration;
-		if (transitionType <= 0
-				|| transitionType > (Geofence.GEOFENCE_TRANSITION_DWELL
-						| Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT))
-			//throw new IllegalArgumentException();
-			Log.d("ghostGeneration", "transition");
 		this.transitionType = transition;
 		this.vulnerable = vulnerable;
 	}

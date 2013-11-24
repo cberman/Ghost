@@ -435,7 +435,7 @@ public class MainActivity extends Activity implements
 		Log.d("itemGeneration", "id: " + id + "; lat: " + latitude + "; long: "
 				+ longitude);
 		Item item = new Item(Integer.toString(id), latitude, longitude,
-				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
+				Constants.BOMB_PICKUP, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
 				Geofence.GEOFENCE_TRANSITION_ENTER);
 		// Store this flat version
@@ -671,8 +671,8 @@ public class MainActivity extends Activity implements
 								R.drawable.dollarsign);
 					}
 
-					scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
-							bm.getHeight() / 2, false);
+					scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 4,
+							bm.getHeight() / 4, false);
 				}
 				Marker marker = map.addMarker(new MarkerOptions()
 						.icon(BitmapDescriptorFactory.fromBitmap(scaled))
