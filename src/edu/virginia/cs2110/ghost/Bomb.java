@@ -2,19 +2,9 @@ package edu.virginia.cs2110.ghost;
 
 public class Bomb extends Item {
 
-	private double blastRadius;
-
 	public Bomb(String geofenceId, double latitude, double longitude,
 			float radius, long expiration, int transition) {
 		super(geofenceId, latitude, longitude, radius, expiration, transition);
-		// TODO Auto-generated constructor stub
-	}
-
-	// feed constructor current location of user.
-	public Bomb(String geofenceId, double latitude, double longitude,
-			float radius, long expiration, int transition, double blastRadius) {
-		super(geofenceId, latitude, longitude, radius, expiration, transition);
-		this.setBlastRadius(blastRadius);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -25,7 +15,7 @@ public class Bomb extends Item {
 					Math.pow(Math.abs(g.getLatitude() - myLat), 2)
 							+ Math.pow(Math.abs(g.getLongitude() - myLong), 2),
 					0.5);
-			if ( distance <= blastRadius) {
+			if ( distance <= Constants.BOMB_RADIUS) {
 				mGhosts.clearGhost(id);
 				/**
 				 * need to remove ghost from the map
@@ -37,14 +27,6 @@ public class Bomb extends Item {
 
 		return mGhosts;
 
-	}
-
-	public double getBlastRadius() {
-		return blastRadius;
-	}
-
-	public void setBlastRadius(double blastRadius) {
-		this.blastRadius = blastRadius;
 	}
 
 }
