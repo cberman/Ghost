@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements
 	private boolean mUpdatesRequested;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mEditor;
-	// Internal List of Geofence objects
+	// Internal List of Geofence objects, temporary storage
 	private List<Geofence> mGeofences;
 	// Persistent storage for ghosts
 	private GhostStore mGhosts;
@@ -376,7 +376,7 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGeofences.size() + 1;
+		int id = mGhosts.getIds().size() + 1;
 		while (mGhosts.getIds().contains(Integer.toString(id)))
 			id++;
 		/*
@@ -404,7 +404,7 @@ public class MainActivity extends Activity implements
 		/*
 		 * Find an id that isn't in use
 		 */
-		int id = mGeofences.size() + 100
+		int id = mItems.getIds().size() + 100
 				* (1 + (int) (Math.random() * ((2 - 1) + 1)));
 		while (mItems.getIds().contains(Integer.toString(id)))
 			id++;
@@ -449,23 +449,22 @@ public class MainActivity extends Activity implements
 		if (mGeofences.size() == 0)
 			return true;
 		// If a request is not already underway
-		if (!mInProgress) {
-			// Indicate that a request is underway
-			mInProgress = true;
-			// Send a request to add the current geofences
-			// Get the PendingIntent for the request
-			mTransitionPendingIntent = getTransitionPendingIntent();
-			// Send a request to add the current geofences
-			mLocationClient.addGeofences(mGeofences, mTransitionPendingIntent,
-					this);
-		} else {
+		if (mInProgress)
 			/*
 			 * A request is already underway. You can handle this situation by
 			 * disconnecting the client, re-setting the flag, and then re-trying
 			 * the request.
 			 */
 			return false;
-		}
+		// Indicate that a request is underway
+		mInProgress = true;
+		// Send a request to add the current geofences
+		// Get the PendingIntent for the request
+		mTransitionPendingIntent = getTransitionPendingIntent();
+		// Send a request to add the current geofences
+		mLocationClient
+				.addGeofences(mGeofences, mTransitionPendingIntent, this);
+		mGeofences.clear();
 		return true;
 	}
 
@@ -653,9 +652,6 @@ public class MainActivity extends Activity implements
 			 * extended data.
 			 */
 			for (String id : geofenceRequestIds) {
-				for (Geofence g : mGeofences)
-					if (id != null && id.equals(g.getRequestId()))
-						mGeofences.remove(g);
 				// Remove the ghost from the map
 				mapMarkers.get(id).remove();
 				mGhosts.clearGhost(id);
