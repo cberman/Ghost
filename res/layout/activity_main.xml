@@ -40,7 +40,9 @@
             android:layout_width="25dp"
             android:layout_height="44dp"
             android:layout_gravity="center"
-            android:src="@drawable/dollarsign" />
+            android:src="@drawable/dollarsign" 
+            android:clickable="true"
+            android:onClick="buyBomb"/>
 
         <ImageView
             android:id="@+id/imageView4"

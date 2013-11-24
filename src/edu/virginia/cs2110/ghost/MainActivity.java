@@ -68,6 +68,8 @@ public class MainActivity extends Activity implements
 	private GoogleMap map;
 	private Map<String, Marker> mapMarkers;
 
+	int bombs, money;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -427,6 +429,16 @@ public class MainActivity extends Activity implements
 		// Store this flat version
 		mItems.saveItem(Integer.toString(id), item);
 		mGeofences.add(item.toGeofence());
+	}
+
+	public void buyBomb(View v) {
+		if (money < 5) {
+			Toast.makeText(this, "You need $5 to buy a bomb",
+					Toast.LENGTH_SHORT).show();
+		} else {
+			money -= 5;
+			bombs++;
+		}
 	}
 
 	public void useBomb(View v) {
