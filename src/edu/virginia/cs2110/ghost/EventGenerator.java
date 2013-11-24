@@ -14,6 +14,10 @@ public class EventGenerator extends AsyncTask<MainActivity, Void, Void> {
 				main.createGhost();
 				updated = true;
 			}
+			if(elapsed % (20 * (main.difficulty + 1)) == 0) {
+				main.createGhost();
+				updated = true;
+			}
 			if(updated)
 				main.addGeofences();
 			try {
