@@ -93,11 +93,11 @@ public class CameraActivity extends Activity implements SensorEventListener {
 					// Scale should be based on distance to ghost
 					matrix.postScale(.75f, .75f, ghostWidth / 2,
 							ghostHeight / 2);
-					matrix.postTranslate(
-							(((ghostAngle(i) - orientation[0] + 180) % 360f) - 180)
-									* ghostWidth / 30,
-							(((-90 - orientation[1] + 180) % 360f) - 180)
-									* ghostHeight / 40);
+					float angle = ((ghostAngle(i) - orientation[0] + 540f) % 360f) - 180f ;
+					Log.d("ghostView", i + ": " + ghostAngle(i) + " - " + orientation[0] +" = "+angle);
+					matrix.postTranslate(angle * ghostWidth / 30f, (((-90
+							- orientation[1] + 180) % 360f) - 180)
+							* ghostHeight / 40);
 					overlay[i].setImageMatrix(matrix);
 				}
 			}
@@ -109,12 +109,8 @@ public class CameraActivity extends Activity implements SensorEventListener {
 	 */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			Intent i = new Intent(this, MainActivity.class);
-			startActivity(i);
-			return true;
-		}
-
+		// activity is done and should be closed
+		finish();
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -133,7 +129,9 @@ public class CameraActivity extends Activity implements SensorEventListener {
 				* Math.cos(ghostLat) * Math.cos(dLon);
 		double bearing = Math.toDegrees(Math.atan2(y, x));
 		if (!mView.facingBack)
-			bearing = (bearing + 180) % 360.0;
+			bearing -= 180;
+		if(bearing < 0)
+			bearing += 360;
 		return (float) bearing;
 	}
 }
