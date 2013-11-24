@@ -52,8 +52,8 @@
             android:layout_gravity="right"
             android:layout_marginTop="50dip"
             android:padding="7dip"
-            android:layout_marginRight="100dp"
-            android:text="bombsss" 
+            android:layout_marginRight="75dp"
+            android:text="0" 
             android:textColor="@color/white" />
            
         <TextView
@@ -62,8 +62,9 @@
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dip"
+             android:layout_marginLeft="10dp"
             android:padding="7dip"
-            android:text="$$$"
+            android:text="0"
             android:textColor="@color/white" />
         
         <TextView
@@ -73,8 +74,8 @@
             android:layout_gravity="left"
             android:layout_marginTop="50dip"
             android:padding="7dip"
-            android:layout_marginLeft="100dp"
-            android:text="Kills"
+            android:layout_marginLeft="128dp"
+            android:text="0"
             android:textColor="@color/white" />
 
         <ImageView
