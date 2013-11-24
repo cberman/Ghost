@@ -109,6 +109,7 @@ public class MainActivity extends Activity implements
 		// Start with the request flag set to false
 		mInProgress = false;
 		random = new Random(System.currentTimeMillis());
+		difficulty = Constants.DIFFICULTY_EASY;
 	}
 
 	@Override
@@ -321,11 +322,11 @@ public class MainActivity extends Activity implements
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 18));
 
 		// If already requested, start periodic updates
-		createGhost();
-		addGeofences();
 		if (mUpdatesRequested) {
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 		}
+		
+		new EventGenerator().execute(this);
 	}
 
 	/*
@@ -386,7 +387,7 @@ public class MainActivity extends Activity implements
 		mCurrentLocation = location;
 	}
 
-	private void createGhost() {
+	public void createGhost() {
 		/*
 		 * Find an id that isn't in use
 		 */
@@ -414,7 +415,7 @@ public class MainActivity extends Activity implements
 		mGeofences.add(ghost.toGeofence());
 	}
 
-	private void createItem() {
+	public void createItem() {
 		/*
 		 * Find an id that isn't in use
 		 */
