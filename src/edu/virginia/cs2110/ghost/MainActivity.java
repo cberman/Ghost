@@ -646,7 +646,7 @@ public class MainActivity extends Activity implements
 			for (String id : geofenceRequestIds) {
 				double latitude = 0, longitude = 0;
 				Bitmap scaled = null;
-				if (Integer.parseInt(id) <= 100) {
+				if (Integer.parseInt(id) < 100) {
 					Ghost ghost = mGhosts.getGhost(id);
 					latitude = ghost.getLatitude();
 					longitude = ghost.getLongitude();
