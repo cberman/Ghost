@@ -430,6 +430,21 @@ public class MainActivity extends Activity implements
 		mItems.saveItem(Integer.toString(id), item);
 		mGeofences.add(item.toGeofence());
 	}
+	
+	private void createMoney(double lat, double lon) {
+
+		int id = mItems.getIds().size() + 200;
+		while (mItems.getIds().contains(Integer.toString(id)))
+			id++;
+
+		Item item = new Item(Integer.toString(id), lat, lon,
+				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
+				// This geofence records only entry transitions
+				Geofence.GEOFENCE_TRANSITION_ENTER);
+		// Store this flat version
+		mItems.saveItem(Integer.toString(id), item);
+		mGeofences.add(item.toGeofence());
+	}
 
 	public void buyBomb(View v) {
 		if (money < 5) {
