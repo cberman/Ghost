@@ -62,6 +62,7 @@ public final class Constants {
 	public static final double BOMB_RADIUS = 50;
 
 	public static final int DIFFICULTY_EASY = 0;
-	public static final int DIFFICULTY_HARD = 1;
+	public static final int DIFFICULTY_MEDIUM = 1;
+	public static final int DIFFICULTY_HARD = 2;
 
 }
