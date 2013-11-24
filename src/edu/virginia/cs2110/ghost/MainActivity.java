@@ -442,6 +442,10 @@ public class MainActivity extends Activity implements
 	}
 
 	public void useBomb(View v) {
+		if( bombs == 0) {
+			Toast.makeText(this, "You don't have any bombs", Toast.LENGTH_SHORT).show();
+			return;
+		}
 		Toast.makeText(this, "Bomb!", Toast.LENGTH_SHORT).show();
 	}
 
