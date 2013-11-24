@@ -626,7 +626,7 @@ public class MainActivity extends Activity implements
 	private PendingIntent getTransitionPendingIntent() {
 		// No functionality yet
 		// Create an explicit Intent
-		Intent intent = new Intent();
+		Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
 		/*
 		 * Return the PendingIntent
 		 */
