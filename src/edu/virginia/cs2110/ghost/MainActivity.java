@@ -501,8 +501,11 @@ public class MainActivity extends Activity implements
 			if (haversine(latitude, longitude, ghostLat, ghostLong) <= Constants.BOMB_RADIUS) {
 				killed.add(id);
 				ghostsKilled++;
+				createMoney(ghostLat, ghostLong);
 			}
 		}
+		// Add the money
+		addGeofences();
 		removeGeofences(killed);
 	}
 
