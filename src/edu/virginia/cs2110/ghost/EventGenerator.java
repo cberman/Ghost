@@ -1,6 +1,8 @@
 package edu.virginia.cs2110.ghost;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -38,21 +40,32 @@ public class EventGenerator extends AsyncTask<MainActivity, Void, Void> {
 				Log.d("transition",
 						prefs.getStringSet(Constants.TRANSITION_IDS,
 								Constants.EMPTY_STRING_SET).toString());
+				boolean nearGhost = false;
+				List<String> bombs = new ArrayList<String>();
+				List<String> money = new ArrayList<String>();
 				for (String id : prefs.getStringSet(Constants.TRANSITION_IDS,
 						Constants.EMPTY_STRING_SET)) {
 					switch (id.charAt(0)) {
 					case 'G':
 						Log.d("transition", "ghost");
-						main.proximityAlert();
+						nearGhost = true;
 						break;
 					case 'B':
 						Log.d("transition", "bomb");
+						bombs.add(id);
 						break;
 					case 'M':
 						Log.d("transition", "money");
+						money.add(id);
 						break;
 					}
 				}
+				if(nearGhost)
+					main.proximityAlert();
+				if(!bombs.isEmpty())
+					main.pickupBomb(bombs);
+				if(!money.isEmpty())
+					main.pickupMoney(money);
 				editor.putBoolean(Constants.TRANSITION_UPDATE, false);
 				editor.commit();
 			}

@@ -593,7 +593,6 @@ public class MainActivity extends Activity implements
 	 * 
 	 */
 	public boolean removeGeofences(List<String> geofenceIds) {
-		Log.d("bombing", geofenceIds.toString());
 		if (geofenceIds.isEmpty())
 			return true;
 		/*
@@ -626,8 +625,41 @@ public class MainActivity extends Activity implements
 	public void proximityAlert() {
 		runOnUiThread(new Runnable() {
 			public void run() {
-				Toast.makeText(getApplicationContext(), "Look out, you're near a ghost!",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(),
+						"Look out, you're near a ghost!", Toast.LENGTH_LONG)
+						.show();
+			}
+		});
+	}
+
+	public void pickupBomb(final List<String> ids) {
+		bombs += ids.size();
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		runOnUiThread(new Runnable() {
+			public void run() {
+				((TextView) findViewById(R.id.textViewBomb)).setText(Integer
+						.toString(bombs));
+				removeGeofences(ids);
+			}
+		});
+	}
+
+	public void pickupMoney(final List<String> ids) {
+		money += ids.size();
+		try {
+			Thread.sleep(250);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		runOnUiThread(new Runnable() {
+			public void run() {
+				((TextView) findViewById(R.id.textViewDollar)).setText(Integer
+						.toString(money));
+				removeGeofences(ids);
 			}
 		});
 	}
@@ -737,10 +769,12 @@ public class MainActivity extends Activity implements
 			 */
 			for (String id : geofenceRequestIds) {
 				// Remove the ghost from the map
-				Log.d("bombing", "Removing ghost " + id);
 				mapMarkers.get(id).remove();
 				mapMarkers.remove(id);
-				mGhosts.clearGhost(id);
+				if(id.charAt(0) == 'G')
+					mGhosts.clearGhost(id);
+				else
+					mItems.clearItem(id);
 			}
 		} else {
 			// If removing the geofences failed
