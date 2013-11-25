@@ -644,7 +644,9 @@ public class MainActivity extends Activity implements
 		
 		runOnUiThread(new Runnable() {
 			public void run() {
-				setContentView(R.layout.game_over);
+                Intent i = new Intent(MainActivity.this, GameOver.class);
+                startActivity(i);
+                finish();
 			}
 		});
 	}

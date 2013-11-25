@@ -49,11 +49,16 @@
         <activity
             android:name="edu.virginia.cs2110.ghost.MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="edu.virginia.cs2110.ghost.CameraActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black" >
         </activity>
         <activity
-            android:name="edu.virginia.cs2110.ghost.CameraActivity"
+            android:name="edu.virginia.cs2110.ghost.GameOver"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black" >
