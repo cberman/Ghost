@@ -350,7 +350,6 @@ public class MainActivity extends Activity implements
 		 * listener, so the argument is "this".
 		 */
 		mLocationClient.removeLocationUpdates(this);
-		removeGeofences(new ArrayList<String>(mGhosts.getIds()));
 	}
 
 	/*
