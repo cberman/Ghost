@@ -488,8 +488,8 @@ public class MainActivity extends Activity implements
 				R.drawable.boom);
 		Bitmap scaled = Bitmap.createScaledBitmap(bm, bm.getWidth() / 2,
 				bm.getHeight() / 2, false);
-		double latitude = mCurrentLocation.getLatitude();
-		double longitude = mCurrentLocation.getLongitude();
+		final double latitude = mCurrentLocation.getLatitude();
+		final double longitude = mCurrentLocation.getLongitude();
 		final Marker bomb = map.addMarker(new MarkerOptions()
 				.icon(BitmapDescriptorFactory.fromBitmap(scaled))
 				.anchor(0.5f, 0.5f).position(new LatLng(latitude, longitude)));
@@ -499,25 +499,31 @@ public class MainActivity extends Activity implements
 				bomb.remove();
 			}
 		}, 500);
-		List<String> killed = new ArrayList<String>();
-		for (String id : mGhosts.getIds()) {
-			Ghost g = mGhosts.getGhost(id);
-			double ghostLat = g.getLatitude(), ghostLong = g.getLongitude();
-			Log.d("location", latitude + ", " + longitude);
-			Log.d("ghostLoc", ghostLat + ", " + ghostLong);
-			Log.d("distance",
-					haversine(latitude, longitude, ghostLat, ghostLong) + "");
-			if (haversine(latitude, longitude, ghostLat, ghostLong) <= Constants.BOMB_RADIUS) {
-				killed.add(id);
-				ghostsKilled++;
-				createMoney(ghostLat, ghostLong);
+		new Handler().post(new Runnable() {
+			public void run() {
+				List<String> killed = new ArrayList<String>();
+				for (String id : mGhosts.getIds()) {
+					Ghost g = mGhosts.getGhost(id);
+					double ghostLat = g.getLatitude(), ghostLong = g
+							.getLongitude();
+					Log.d("location", latitude + ", " + longitude);
+					Log.d("ghostLoc", ghostLat + ", " + ghostLong);
+					Log.d("distance",
+							haversine(latitude, longitude, ghostLat, ghostLong)
+									+ "");
+					if (haversine(latitude, longitude, ghostLat, ghostLong) <= Constants.BOMB_RADIUS) {
+						killed.add(id);
+						ghostsKilled++;
+						createMoney(ghostLat, ghostLong);
+					}
+				}
+				((TextView) findViewById(R.id.textViewGhost)).setText(Integer
+						.toString(ghostsKilled));
+				// Add the money
+				addGeofences();
+				removeGeofences(killed);
 			}
-		}
-		((TextView) findViewById(R.id.textViewGhost)).setText(Integer
-				.toString(ghostsKilled));
-		// Add the money
-		addGeofences();
-		removeGeofences(killed);
+		});
 	}
 
 	/**
@@ -607,6 +613,8 @@ public class MainActivity extends Activity implements
 	private PendingIntent getTransitionPendingIntent() {
 		// Create an explicit Intent
 		Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
+		Bundle bundle = new Bundle();
+		intent.putExtras(bundle);
 		/*
 		 * Return the PendingIntent
 		 */
