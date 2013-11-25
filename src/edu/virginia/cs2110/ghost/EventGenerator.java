@@ -58,13 +58,20 @@ public class EventGenerator extends AsyncTask<MainActivity, Void, Void> {
 						Log.d("transition", "money");
 						money.add(id);
 						break;
+					case 'D':
+						if (id.equals("DEATH"))
+							main.gameOver();
+							break;
+					default:
+						Log.e("ReceiveTransitionsIntentService",
+								"Invalid id \"" + id + "\"generated");
 					}
 				}
-				if(nearGhost)
+				if (nearGhost)
 					main.proximityAlert();
-				if(!bombs.isEmpty())
+				if (!bombs.isEmpty())
 					main.pickupBomb(bombs);
-				if(!money.isEmpty())
+				if (!money.isEmpty())
 					main.pickupMoney(money);
 				editor.putBoolean(Constants.TRANSITION_UPDATE, false);
 				editor.commit();

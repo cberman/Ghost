@@ -403,7 +403,7 @@ public class MainActivity extends Activity implements
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		double radius = (random.nextGaussian() * 10 + 100)
+		double radius = (random.nextGaussian() * 10 + 10)
 				/ Constants.METERS_PER_DEGREE;
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
@@ -413,7 +413,8 @@ public class MainActivity extends Activity implements
 		Ghost ghost = new Ghost("G" + id, latitude, longitude,
 				Constants.GHOST_RADIUS, Constants.GHOST_EXPIRATION_TIME,
 				// This geofence records only entry transitions
-				Geofence.GEOFENCE_TRANSITION_ENTER, false);
+				Geofence.GEOFENCE_TRANSITION_ENTER
+						| Geofence.GEOFENCE_TRANSITION_DWELL, false);
 		// Store this flat version
 		mGhosts.saveGhost("G" + id, ghost);
 		mGeofences.add(ghost.toGeofence());
@@ -632,6 +633,23 @@ public class MainActivity extends Activity implements
 		});
 	}
 
+	public void gameOver() {
+		generator.cancel(true);
+
+		if (mLocationClient != null && mLocationClient.isConnected()) {
+			/*
+			 * After disconnect() is called, the client is considered "dead".
+			 */
+			mLocationClient.disconnect();
+		}
+		
+		runOnUiThread(new Runnable() {
+			public void run() {
+				setContentView(R.layout.game_over);
+			}
+		});
+	}
+
 	public void pickupBomb(final List<String> ids) {
 		bombs += ids.size();
 		try {
@@ -771,7 +789,7 @@ public class MainActivity extends Activity implements
 				// Remove the ghost from the map
 				mapMarkers.get(id).remove();
 				mapMarkers.remove(id);
-				if(id.charAt(0) == 'G')
+				if (id.charAt(0) == 'G')
 					mGhosts.clearGhost(id);
 				else
 					mItems.clearItem(id);

@@ -65,7 +65,7 @@ public class Ghost {
 	public boolean getVulnerable() {
 		return vulnerable;
 	}
-	
+
 	public double getLatitude() {
 		return latitude;
 	}
@@ -96,6 +96,7 @@ public class Ghost {
 		return new Geofence.Builder().setRequestId(getId())
 				.setTransitionTypes(transitionType)
 				.setCircularRegion(getLatitude(), getLongitude(), getRadius())
-				.setExpirationDuration(expirationDuration).build();
+				.setExpirationDuration(expirationDuration)
+				.setLoiteringDelay(Constants.GHOST_KILL_TIME).build();
 	}
 }
