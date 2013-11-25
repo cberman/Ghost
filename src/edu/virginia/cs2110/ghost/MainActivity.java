@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements
 	private GhostStore mGhosts;
 	// Persistent storage for items
 	private ItemStore mItems;
+	private EventGenerator generator;
 	// Stores the PendingIntent used to request geofence monitoring
 	private PendingIntent mTransitionPendingIntent;
 	// Used to generate ghost locations
@@ -181,7 +182,9 @@ public class MainActivity extends Activity implements
 	 */
 	@Override
 	protected void onStop() {
-		if (mLocationClient.isConnected()) {
+		generator.cancel(true);
+
+		if (mLocationClient != null && mLocationClient.isConnected()) {
 			/*
 			 * After disconnect() is called, the client is considered "dead".
 			 */
@@ -327,7 +330,8 @@ public class MainActivity extends Activity implements
 			mLocationClient.requestLocationUpdates(mLocationRequest, this);
 		}
 
-		new EventGenerator().execute(this);
+		generator = new EventGenerator();
+		generator.execute(this);
 	}
 
 	/*
@@ -601,7 +605,6 @@ public class MainActivity extends Activity implements
 	 * geofence transition occurs.
 	 */
 	private PendingIntent getTransitionPendingIntent() {
-		// No functionality yet
 		// Create an explicit Intent
 		Intent intent = new Intent(this, ReceiveTransitionsIntentService.class);
 		/*
