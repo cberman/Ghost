@@ -93,8 +93,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 					// Scale should be based on distance to ghost
 					matrix.postScale(.75f, .75f, ghostWidth / 2,
 							ghostHeight / 2);
-					float angle = ((ghostAngle(i) - orientation[0] + 540f) % 360f) - 180f ;
-					Log.d("ghostView", i + ": " + ghostAngle(i) + " - " + orientation[0] +" = "+angle);
+					float angle = ((ghostAngle(i) - orientation[0] + 540f) % 360f) - 180f;
 					matrix.postTranslate(angle * ghostWidth / 30f, (((-90
 							- orientation[1] + 180) % 360f) - 180)
 							* ghostHeight / 40);
@@ -130,7 +129,7 @@ public class CameraActivity extends Activity implements SensorEventListener {
 		double bearing = Math.toDegrees(Math.atan2(y, x));
 		if (!mView.facingBack)
 			bearing -= 180;
-		if(bearing < 0)
+		if (bearing < 0)
 			bearing += 360;
 		return (float) bearing;
 	}
