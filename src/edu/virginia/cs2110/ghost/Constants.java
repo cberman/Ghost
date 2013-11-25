@@ -1,5 +1,8 @@
 package edu.virginia.cs2110.ghost;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public final class Constants {
 
 	// Invalid values, used to test geofence storage when retrieving geofences
@@ -31,11 +34,14 @@ public final class Constants {
 
 	// A string of length 0, used to clear out input fields
 	public static final String EMPTY_STRING = new String();
+	public static final Set<String> EMPTY_STRING_SET = new HashSet<String>();
 
 	public static final CharSequence GEOFENCE_ID_DELIMITER = ",";
 
 	// The name of the SharedPreferences
 	public static final String SHARED_PREFERENCES = "SharedPreferences";
+	public static final String TRANSITION_UPDATE = "TRANSITION_UPDATE";
+	public static final String TRANSITION_IDS = "TRANSITION_IDS";
 
 	/*
 	 * Timing constants

@@ -1,12 +1,18 @@
 package edu.virginia.cs2110.ghost;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -52,17 +58,22 @@ public class ReceiveTransitionsIntentService extends IntentService {
 				List<Geofence> triggerList = LocationClient
 						.getTriggeringGeofences(intent);
 
-				String[] triggerIds = new String[triggerList.size()];
 
-				for (int i = 0; i < triggerIds.length; i++) {
+				Set<String> triggerIds = new HashSet<String>();
+
+				for (int i = 0; i < triggerList.size(); i++) {
 					// Store the Id of each geofence
-					triggerIds[i] = triggerList.get(i).getRequestId();
+					triggerIds.add(triggerList.get(i).getRequestId());
 				}
-				/*
-				 * At this point, you can store the IDs for further use display
-				 * them, or display the details associated with them.
-				 */
-				//Toast.makeText(this, "You are near something", Toast.LENGTH_LONG).show();
+
+				// Open the shared preferences
+				SharedPreferences prefs = getSharedPreferences(
+						Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+				// Get a SharedPreferences editor
+				Editor editor = prefs.edit();
+				editor.putBoolean(Constants.TRANSITION_UPDATE, true);
+				editor.putStringSet(Constants.TRANSITION_IDS, triggerIds);
+				editor.commit();
 			} else {
 				// An invalid transition was reported
 				Log.e("ReceiveTransitionsIntentService",

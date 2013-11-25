@@ -111,6 +111,7 @@ public class MainActivity extends Activity implements
 		mGeofences = new ArrayList<Geofence>();
 		mapMarkers = new HashMap<String, Marker>();
 		random = new Random(System.currentTimeMillis());
+		// Default difficulty is easy
 		difficulty = Constants.DIFFICULTY_EASY;
 	}
 
@@ -402,7 +403,7 @@ public class MainActivity extends Activity implements
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		double radius = (random.nextGaussian() * 10 + 60)
+		double radius = (random.nextGaussian() * 10 + 100)
 				/ Constants.METERS_PER_DEGREE;
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
@@ -620,6 +621,15 @@ public class MainActivity extends Activity implements
 		 */
 		return PendingIntent.getService(this, 0, intent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
+	}
+
+	public void proximityAlert() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				Toast.makeText(getApplicationContext(), "Look out, you're near a ghost!",
+						Toast.LENGTH_LONG).show();
+			}
+		});
 	}
 
 	@Override
