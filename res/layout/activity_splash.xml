@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- used this tutorial for splash screen: http://www.androidhive.info/2013/07/how-to-implement-android-splash-screen-2/
-used tutorial on developer.android.com on styles and themes for saving colors -->
+used tutorial on developer.android.com on styles and themes for saving colors 
+graphics designed by Conor Levey-->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
