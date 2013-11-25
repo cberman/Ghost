@@ -68,7 +68,7 @@ public final class Constants {
 	
 	public static final double METERS_PER_DEGREE = 111111;
 
-	public static final double BOMB_RADIUS = 500;
+	public static final double BOMB_RADIUS = 50;
 	
 	public static final float PICKUP_RADIUS = 10;
 
