@@ -403,7 +403,7 @@ public class MainActivity extends Activity implements
 		 */
 		double latitude = mCurrentLocation.getLatitude();
 		double longitude = mCurrentLocation.getLongitude();
-		double radius = (random.nextGaussian() * 10 + 10)
+		double radius = (random.nextGaussian() * 10 + 100)
 				/ Constants.METERS_PER_DEGREE;
 		double theta = random.nextDouble() * 2 * Math.PI;
 		latitude += radius * Math.cos(theta);
