@@ -41,6 +41,12 @@ import com.google.android.gms.location.LocationStatusCodes;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.*;
 
+/**
+ * Some code taken from
+ * http://developer.android.com/training/location/retrieve-current.html and
+ * subsequent tutorial
+ * 
+ */
 public class MainActivity extends Activity implements
 		GooglePlayServicesClient.ConnectionCallbacks,
 		OnConnectionFailedListener, LocationListener,
@@ -641,12 +647,12 @@ public class MainActivity extends Activity implements
 			 */
 			mLocationClient.disconnect();
 		}
-		
+
 		runOnUiThread(new Runnable() {
 			public void run() {
-                Intent i = new Intent(MainActivity.this, GameOver.class);
-                startActivity(i);
-                finish();
+				Intent i = new Intent(MainActivity.this, GameOver.class);
+				startActivity(i);
+				finish();
 			}
 		});
 	}
