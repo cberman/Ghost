@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- used google's tutorial on maps and on menus, and used this: (http://stackoverflow.com/questions/6690530/how-to-show-one-layout-on-top-of-the-other-programmatically-in-my-case)
+for help with the score bar -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
