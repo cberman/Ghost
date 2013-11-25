@@ -14,6 +14,8 @@ public class EventGenerator extends AsyncTask<MainActivity, Void, Void> {
 
 	@Override
 	protected Void doInBackground(MainActivity... args) {
+		if(isCancelled())
+			return null;
 		MainActivity main = args[0];
 		// Open the shared preferences
 		SharedPreferences prefs = main.getSharedPreferences(
@@ -82,7 +84,7 @@ public class EventGenerator extends AsyncTask<MainActivity, Void, Void> {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				return null;
 			}
 		}
 	}
